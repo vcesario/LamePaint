@@ -2,6 +2,8 @@
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
 
+#include "ui.h"
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
@@ -43,6 +45,10 @@ int main()
 	glViewport(0, 0, 800, 600);
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
+	int mouseX = 0;
+	int mouseY = 0;
+	float fps = 99.999f;
+
 	while (!glfwWindowShouldClose(window))
 	{
 		glfwPollEvents();
@@ -51,24 +57,9 @@ int main()
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
-
-		if (ImGui::BeginMainMenuBar())
-		{
-			if (ImGui::BeginMenu("Menu"))
-			{
-				if (ImGui::MenuItem("New"))
-				{
-				}
-
-				if (ImGui::MenuItem("Exit"))
-				{
-				}
-
-				ImGui::EndMenu();
-			}
-
-			ImGui::EndMainMenuBar();
-		}
+		
+		DrawMainMenu();
+		DrawBottomBar(mouseX, mouseY, fps);
 
 		// render
 		glClear(GL_COLOR_BUFFER_BIT);

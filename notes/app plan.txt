@@ -1,0 +1,43 @@
+LAMEPAINT
+
+Menu options:
+- New: clears entire canvas
+- Open: Loads image file from disk
+- Export: Saves image to disk
+- Exit: Closes app
+
+Tools:
+- Round Brush: Adds pixels to canvas. Can be resized.
+- Bucket: Paints entire contiguous section.
+- Color palette: Changes color of brush/bucket. 
+- Eraser: Removes pixels from canvas. Can be resized.
+
+Bottom bar:
+- FPS counter: Shows the app's performance
+- Mouse coordinates: Shows mouse position in pixels
+
+-----------------------------------------------------------------
+
+To do:
+
+- [x] Main menu layout
+- [x] Bottom bar layout
+- [] Functioning FPS counter
+- [] Functioning mouse coordinates
+
+- [] Simple round brush (white ink on black canvas)
+- [] Colored round brush (numbers change color as debug)
+- [] Tools layout
+- [] Functioning colors
+- [] Eraser
+
+- [] Exit menu option
+- [] New menu option
+- [] Open menu option
+- [] Export menu option
+
+- [] Functioning bucket
+
+Depending on how quick I do this, I could add:
+- Color picker
+- Zoom
