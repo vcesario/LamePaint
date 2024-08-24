@@ -1,5 +1,10 @@
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_glfw.h"
+#include "imgui/imgui_impl_opengl3.h"
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+
 #include <iostream>
 
 int main()
@@ -26,14 +31,60 @@ int main()
 		return -1;
 	}
 
+	// setup imgui
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO();
+
+	// setup imgui renderers
+	ImGui_ImplGlfw_InitForOpenGL(window, true);
+	ImGui_ImplOpenGL3_Init(/*"#version 130"*/);
+
 	glViewport(0, 0, 800, 600);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 	while (!glfwWindowShouldClose(window))
 	{
-		glfwSwapBuffers(window);
 		glfwPollEvents();
+
+		// imgui logic
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
+
+		if (ImGui::BeginMainMenuBar())
+		{
+			if (ImGui::BeginMenu("Menu"))
+			{
+				if (ImGui::MenuItem("New"))
+				{
+				}
+
+				if (ImGui::MenuItem("Exit"))
+				{
+				}
+
+				ImGui::EndMenu();
+			}
+
+			ImGui::EndMainMenuBar();
+		}
+
+		// render
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		// imgui render
+		ImGui::Render();
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+		glfwSwapBuffers(window);
 	}
 	
+	// terminate imgui
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplGlfw_Shutdown();
+	ImGui::DestroyContext();
+
 	glfwTerminate();
 	return -1;
 }
