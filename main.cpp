@@ -3,11 +3,14 @@
 #include "imgui/imgui_impl_opengl3.h"
 
 #include "ui.h"
+#include "app.h"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 #include <iostream>
+
+void OnCursorMoved_Callback(GLFWwindow* window, double xpos, double ypos);
 
 int main()
 {
@@ -28,6 +31,8 @@ int main()
 
 	//glfwSwapInterval(0); // vsync off - useful to understand app performance even if above 60fps
 
+	glfwSetCursorPosCallback(window, OnCursorMoved_Callback);
+
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
 		std::cout << "Failed to initialize GLAD" << std::endl;
@@ -47,20 +52,20 @@ int main()
 	glViewport(0, 0, 800, 600);
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-	int mouseX = 0;
-	int mouseY = 0;
-
 	while (!glfwWindowShouldClose(window))
 	{
 		glfwPollEvents();
+
 
 		// imgui logic
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
+
+		vec2 pixelCoord = GetCursorPos_Pixel(); // this method uses imgui's frame info, so needs to be called after NewFrame()
 		
 		DrawMainMenu();
-		DrawBottomBar(mouseX, mouseY, io.Framerate);
+		DrawBottomBar(pixelCoord.x, pixelCoord.y, io.Framerate);
 
 		// render
 		glClear(GL_COLOR_BUFFER_BIT);
@@ -79,4 +84,9 @@ int main()
 
 	glfwTerminate();
 	return -1;
+}
+
+void OnCursorMoved_Callback(GLFWwindow* window, double xpos, double ypos)
+{
+	UpdateCursorPos(xpos, ypos);
 }
