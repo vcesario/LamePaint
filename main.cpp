@@ -26,6 +26,8 @@ int main()
 	}
 	glfwMakeContextCurrent(window);
 
+	//glfwSwapInterval(0); // vsync off - useful to understand app performance even if above 60fps
+
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
 		std::cout << "Failed to initialize GLAD" << std::endl;
@@ -47,7 +49,6 @@ int main()
 
 	int mouseX = 0;
 	int mouseY = 0;
-	float fps = 99.999f;
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -59,7 +60,7 @@ int main()
 		ImGui::NewFrame();
 		
 		DrawMainMenu();
-		DrawBottomBar(mouseX, mouseY, fps);
+		DrawBottomBar(mouseX, mouseY, io.Framerate);
 
 		// render
 		glClear(GL_COLOR_BUFFER_BIT);

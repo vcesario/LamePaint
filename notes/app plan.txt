@@ -22,7 +22,7 @@ To do:
 
 - [x] Main menu layout
 - [x] Bottom bar layout
-- [] Functioning FPS counter
+- [x] Functioning FPS counter
 - [] Functioning mouse coordinates
 
 - [] Simple round brush (white ink on black canvas)
