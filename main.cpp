@@ -14,6 +14,7 @@ int STARTING_W = 800;
 int STARTING_H = 600;
 
 void OnCursorMoved_Callback(GLFWwindow* window, double xpos, double ypos);
+void OnMouseClicked_Callback(GLFWwindow* window, int button, int action, int mods);
 
 int main()
 {
@@ -35,6 +36,7 @@ int main()
 	//glfwSwapInterval(0); // vsync off - useful to understand app performance even if above 60fps
 
 	glfwSetCursorPosCallback(window, OnCursorMoved_Callback);
+	glfwSetMouseButtonCallback(window, OnMouseClicked_Callback);
 
 	SetupCanvas(STARTING_W, STARTING_H);
 
@@ -61,6 +63,7 @@ int main()
 	{
 		glfwPollEvents();
 
+		// app logic
 
 		// imgui logic
 		ImGui_ImplOpenGL3_NewFrame();
@@ -72,7 +75,7 @@ int main()
 		DrawMainMenu();
 		DrawBottomBar(pixelCoord.x, pixelCoord.y, io.Framerate);
 
-		// render
+		// app render
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		// imgui render
@@ -94,4 +97,9 @@ int main()
 void OnCursorMoved_Callback(GLFWwindow* window, double xpos, double ypos)
 {
 	UpdateCursorPos(xpos, ypos);
+}
+
+void OnMouseClicked_Callback(GLFWwindow* window, int button, int action, int mods)
+{
+	std::cout << button << ", " << action << ", " << mods << std::endl;
 }

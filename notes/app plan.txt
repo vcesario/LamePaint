@@ -26,6 +26,9 @@ To do:
 - [x] Functioning mouse coordinates
 
 - [] Simple round brush (white ink on black canvas)
+    - [] Create texture and load it into memory
+    - [] While clicking, draw circles around mouse position directly to texture that is already loaded
+    - [] While dragging, draw "lines" (as squares) between the circles
 - [] Colored round brush (numbers change color as debug)
 - [] Tools layout
 - [] Functioning colors
@@ -41,3 +44,7 @@ To do:
 Depending on how quick I do this, I could add:
 - Color picker
 - Zoom
+- Undo
+
+-----------------------------------------------------------------
+
