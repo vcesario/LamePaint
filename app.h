@@ -12,3 +12,4 @@ struct vec2
 
 void UpdateCursorPos(double xpos, double ypos);
 vec2 GetCursorPos_Pixel();
+void SetupCanvas(int width, int height);

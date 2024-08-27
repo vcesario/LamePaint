@@ -1,14 +1,17 @@
+#include "ui.h"
+#include "app.h"
+
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
-
-#include "ui.h"
-#include "app.h"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 #include <iostream>
+
+int STARTING_W = 800;
+int STARTING_H = 600;
 
 void OnCursorMoved_Callback(GLFWwindow* window, double xpos, double ypos);
 
@@ -20,7 +23,7 @@ int main()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	GLFWwindow* window = glfwCreateWindow(800, 600, "Learn OpenGL", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(STARTING_W, STARTING_H, "Learn OpenGL", NULL, NULL);
 	if (window == NULL)
 	{
 		std::cout << "Failed to create window" << std::endl;
@@ -32,6 +35,8 @@ int main()
 	//glfwSwapInterval(0); // vsync off - useful to understand app performance even if above 60fps
 
 	glfwSetCursorPosCallback(window, OnCursorMoved_Callback);
+
+	SetupCanvas(STARTING_W, STARTING_H);
 
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
@@ -49,7 +54,7 @@ int main()
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init(/*"#version 130"*/);
 
-	glViewport(0, 0, 800, 600);
+	glViewport(0, 0, STARTING_W, STARTING_H);
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 	while (!glfwWindowShouldClose(window))

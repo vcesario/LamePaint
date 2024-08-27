@@ -5,6 +5,9 @@
 double m_CursorX;
 double m_CursorY;
 
+int m_WindowWidth;
+int m_WindowHeight;
+
 void UpdateCursorPos(double xpos, double ypos)
 {
 	m_CursorX = xpos;
@@ -13,11 +16,11 @@ void UpdateCursorPos(double xpos, double ypos)
 
 vec2 GetCursorPos_Pixel()
 {
-	int canvasTopEdge = ImGui::GetFrameHeight();
-	int canvasBottomEdge = ImGui::GetWindowHeight() - ImGui::GetFrameHeight();
+	int canvasTopEdge = ImGui::GetFrameHeight(); // first row of pixels that is part of canvas (0-based) = 19
+	int canvasBottomEdge = m_WindowHeight - ImGui::GetFrameHeight(); // first row of pixels that is NOT part of canvas (0-based) = 581
 	int canvasSize = canvasBottomEdge - canvasTopEdge;
 
-	float pixelY = m_CursorY - ImGui::GetFrameHeight();
+	float pixelY = m_CursorY;
 	if (m_CursorY < canvasTopEdge)
 	{
 		pixelY = 0;
@@ -32,4 +35,10 @@ vec2 GetCursorPos_Pixel()
 	}
 
 	return vec2(m_CursorX, pixelY);
+}
+
+void SetupCanvas(int width, int height)
+{
+	m_WindowWidth = width;
+	m_WindowHeight = height;
 }
