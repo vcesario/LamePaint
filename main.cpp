@@ -5,15 +5,12 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
-#include "imgui/imgui.h"
-#include "imgui/imgui_impl_glfw.h"
-#include "imgui/imgui_impl_opengl3.h"
-
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 #include <iostream>
 #include <vector>
+#include "imgui/imgui.h"
 
 const int STARTING_W = 800;
 const int STARTING_H = 600;
@@ -50,14 +47,8 @@ int main()
 		return -1;
 	}
 
-	// setup imgui
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO();
-
-	// setup imgui renderers
-	ImGui_ImplGlfw_InitForOpenGL(window, true);
-	ImGui_ImplOpenGL3_Init(/*"#version 130"*/);
+	InitUI(window);
+	ImGuiIO& io = ImGui::GetIO(); // wanted to do this inside InitUI() but I don't know how to properly make it global
 
 	SetupCanvas(STARTING_W, STARTING_H);
 
@@ -165,25 +156,13 @@ int main()
 		glBindVertexArray(VAO);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-		// imgui logic
-		ImGui_ImplOpenGL3_NewFrame();
-		ImGui_ImplGlfw_NewFrame();
-		ImGui::NewFrame();
-
-		DrawMainMenu();
-		DrawBottomBar(pixelCoord.x, pixelCoord.y, io.Framerate);
-
-		// imgui render
-		ImGui::Render();
-		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+		DrawUI(pixelCoord.x, pixelCoord.y, io.Framerate);
 
 		glfwSwapBuffers(window);
 	}
 	
 	// terminate imgui
-	ImGui_ImplOpenGL3_Shutdown();
-	ImGui_ImplGlfw_Shutdown();
-	ImGui::DestroyContext();
+	TerminateUI();
 
 	glfwTerminate();
 	return -1;
