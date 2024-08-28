@@ -1,5 +1,5 @@
-#ifndef APP_H
-#define APP_H
+#include <vector>
+#include <glad/glad.h>
 
 struct vec2
 {
@@ -15,8 +15,9 @@ struct vec2
 
 extern int CanvasWidth;
 extern int CanvasHeight;
+extern std::vector<GLubyte> data;
 
 void UpdateCursorPos(double xpos, double ypos);
 vec2 GetCursorPos_Pixel();
 void SetupCanvas(int width, int height);
-#endif
+void PaintAtPixelCoord();

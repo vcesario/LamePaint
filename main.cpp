@@ -81,8 +81,7 @@ int main()
 	//stbi_image_free(data);
 
 
-	std::vector<GLubyte> data(STARTING_W * STARTING_H * 4, 255);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, STARTING_W, STARTING_H, 0, GL_RGBA, GL_UNSIGNED_BYTE, &data[0]);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, CanvasWidth, CanvasHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, &data[0]);
 	glGenerateMipmap(GL_TEXTURE_2D); // apparently this is mandatory or else the actual textures aren't generated? not sure
 	//glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, STARTING_W, STARTING_H, GL_RGBA, GL_UNSIGNED_BYTE, &data[0]);
 	//glBindTexture(GL_TEXTURE_2D, 0);
@@ -143,11 +142,10 @@ int main()
 
 		// app logic
 		vec2 pixelCoord = GetCursorPos_Pixel();
-		data[pixelCoord.y * STARTING_W * 4 + pixelCoord.x * 4] = 0; // R
-		data[pixelCoord.y * STARTING_W * 4 + pixelCoord.x * 4 + 1] = 0; // G
-		data[pixelCoord.y * STARTING_W * 4 + pixelCoord.x * 4 + 2] = 0; // B
-		data[pixelCoord.y * STARTING_W * 4 + pixelCoord.x * 4 + 3] = 255; // A
-		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, STARTING_W, STARTING_H, GL_RGBA, GL_UNSIGNED_BYTE, &data[0]);
+
+		PaintAtPixelCoord();
+
+		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, CanvasWidth, CanvasHeight, GL_RGBA, GL_UNSIGNED_BYTE, &data[0]);
 
 		// app render
 		glClear(GL_COLOR_BUFFER_BIT);
