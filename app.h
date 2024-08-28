@@ -1,3 +1,6 @@
+#ifndef APP_H
+#define APP_H
+
 struct vec2
 {
 	double x;
@@ -10,6 +13,10 @@ struct vec2
 	}
 };
 
+extern int CanvasWidth;
+extern int CanvasHeight;
+
 void UpdateCursorPos(double xpos, double ypos);
 vec2 GetCursorPos_Pixel();
 void SetupCanvas(int width, int height);
+#endif

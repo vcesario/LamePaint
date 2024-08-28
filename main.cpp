@@ -43,14 +43,23 @@ int main()
 	glfwSetCursorPosCallback(window, OnCursorMoved_Callback);
 	glfwSetMouseButtonCallback(window, OnMouseClicked_Callback);
 
-	SetupCanvas(STARTING_W, STARTING_H);
-
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
 		std::cout << "Failed to initialize GLAD" << std::endl;
 		glfwTerminate();
 		return -1;
 	}
+
+	// setup imgui
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO();
+
+	// setup imgui renderers
+	ImGui_ImplGlfw_InitForOpenGL(window, true);
+	ImGui_ImplOpenGL3_Init(/*"#version 130"*/);
+
+	SetupCanvas(STARTING_W, STARTING_H);
 
 	Shader shader("sh.vert", "sh.frag");
 	shader.use();
@@ -80,11 +89,12 @@ int main()
 	//}
 	//stbi_image_free(data);
 
-	std::vector<GLubyte> data(STARTING_W * STARTING_H * 4, 200);
+
+	std::vector<GLubyte> data(STARTING_W * STARTING_H * 4, 255);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, STARTING_W, STARTING_H, 0, GL_RGBA, GL_UNSIGNED_BYTE, &data[0]);
 	glGenerateMipmap(GL_TEXTURE_2D); // apparently this is mandatory or else the actual textures aren't generated? not sure
 	//glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, STARTING_W, STARTING_H, GL_RGBA, GL_UNSIGNED_BYTE, &data[0]);
-	glBindTexture(GL_TEXTURE_2D, 0);
+	//glBindTexture(GL_TEXTURE_2D, 0);
 
 	//unsigned int fbo;
 	//glGenFramebuffers(1, &fbo);
@@ -133,15 +143,6 @@ int main()
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
 
-	// setup imgui
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO();
-
-	// setup imgui renderers
-	ImGui_ImplGlfw_InitForOpenGL(window, true);
-	ImGui_ImplOpenGL3_Init(/*"#version 130"*/);
-
 	glViewport(0, 0, STARTING_W, STARTING_H);
 	glClearColor(0.3f, 0.7f, 0.1f, 1.0f);
 
@@ -151,11 +152,16 @@ int main()
 
 		// app logic
 		vec2 pixelCoord = GetCursorPos_Pixel();
+		data[pixelCoord.y * STARTING_W * 4 + pixelCoord.x * 4] = 0; // R
+		data[pixelCoord.y * STARTING_W * 4 + pixelCoord.x * 4 + 1] = 0; // G
+		data[pixelCoord.y * STARTING_W * 4 + pixelCoord.x * 4 + 2] = 0; // B
+		data[pixelCoord.y * STARTING_W * 4 + pixelCoord.x * 4 + 3] = 255; // A
+		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, STARTING_W, STARTING_H, GL_RGBA, GL_UNSIGNED_BYTE, &data[0]);
 
 		// app render
 		glClear(GL_COLOR_BUFFER_BIT);
-		glBindTexture(GL_TEXTURE_2D, texture);
-		shader.use();
+		//glBindTexture(GL_TEXTURE_2D, texture);
+		//shader.use();
 		glBindVertexArray(VAO);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
