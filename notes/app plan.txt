@@ -25,11 +25,13 @@ To do:
 - [x] Functioning FPS counter
 - [x] Functioning mouse coordinates
 
-- [] Simple round brush (white ink on black canvas)
-    - [] Create texture and load it into memory
-    - [] While clicking, draw circles around mouse position directly to texture that is already loaded
+- [] Simple round brush (black ink on white canvas)
+    - [x] Create texture and load it into memory
+    - [x] draw circles around mouse position directly to texture that is already loaded
+    - [] do the above while clicking
     - [] While dragging, draw "lines" (as squares) between the circles
 - [] Colored round brush (numbers change color as debug)
+    - [] fix colors (black brush is kinda greyish right now)
 - [] Tools layout
 - [] Functioning colors
 - [] Eraser

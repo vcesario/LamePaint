@@ -138,8 +138,6 @@ int main()
 
 	while (!glfwWindowShouldClose(window))
 	{
-		glfwPollEvents();
-
 		// app logic
 		vec2 pixelCoord = GetCursorPos_Pixel();
 
@@ -157,6 +155,8 @@ int main()
 		DrawUI(pixelCoord.x, pixelCoord.y, io.Framerate);
 
 		glfwSwapBuffers(window);
+
+		glfwPollEvents();
 	}
 	
 	// terminate imgui

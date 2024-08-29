@@ -74,7 +74,7 @@ void DrawMainMenu()
 	}
 }
 
-void DrawBottomBar(int mouseX, int mouseY, float fps)
+void DrawBottomBar(int posX, int posY, float fps)
 {
 	ImGuiViewportP* viewport = (ImGuiViewportP*)(void*)ImGui::GetMainViewport();
 	ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_MenuBar;
@@ -85,7 +85,7 @@ void DrawBottomBar(int mouseX, int mouseY, float fps)
 		if (ImGui::BeginMenuBar())
 		{
 			std::stringstream mousePosStream;
-			mousePosStream << mouseX << ", " << mouseY << "px";
+			mousePosStream << posX << ", " << posY << "px";
 			ImGui::Text(mousePosStream.str().c_str());
 
 			const float remainingWidth = ImGui::GetContentRegionAvail().x;
