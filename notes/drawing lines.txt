@@ -1,0 +1,11 @@
+Drawing lines
+
+Store the starting point and the end point...
+
+
+Refs:
+
+- StackOverflow: https://stackoverflow.com/questions/1222713/how-do-i-create-a-line-of-arbitrary-thickness-using-bresenham
+- Alan Murphy's Thickened Bresenham: http://homepages.enterprise.net/murphy/thickline/index.html
+- Dilation
+- Triangle Rasterization (i'll probably go with this one): https://jtsorlinis.github.io/rendering-tutorial/
