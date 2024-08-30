@@ -17,7 +17,6 @@ extern int CanvasWidth;
 extern int CanvasHeight;
 extern std::vector<GLubyte> data;
 
-void UpdateCursorPos(double xpos, double ypos);
-vec2 GetCursorPos_Pixel();
+vec2 GetCursorPos_Pixel(double cursorX, double cursorY);
 void SetupCanvas(int width, int height);
-void PaintAtPixelCoord();
+void PaintAtPixelCoord(double cursorX, double cursorY, int brushSize);

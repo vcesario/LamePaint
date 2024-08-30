@@ -3,12 +3,6 @@
 #include "imgui/imgui.h"
 #include <vector>
 
-double m_CursorX;
-double m_CursorY;
-
-//int m_PixelX;
-//int m_PixelY;
-
 int m_WindowWidth;
 int m_WindowHeight;
 
@@ -24,36 +18,11 @@ int FrameHeight()
 	return 19;
 }
 
-void UpdateCursorPos(double xpos, double ypos)
-{
-	m_CursorX = xpos;
-	m_CursorY = ypos;
-
-	//m_PixelX = m_CursorX;
-	//int canvasTopEdge = ImGui::GetFrameHeight(); // first row of pixels that is part of canvas (0-based) = 19
-	//int canvasBottomEdge = m_WindowHeight - ImGui::GetFrameHeight(); // first row of pixels that is NOT part of canvas (0-based) = 581
-	//int canvasSize = canvasBottomEdge - canvasTopEdge;
-
-	//if (m_CursorY < canvasTopEdge)
-	//{
-	//	m_PixelY = 0;
-	//}
-	//else if (m_CursorY >= canvasBottomEdge)
-	//{
-	//	m_PixelY = canvasSize - 1;
-	//}
-	//else
-	//{
-		//m_PixelY = m_CursorY - canvasTopEdge;
-	//m_PixelY = Map(0, m_WindowHeight, m_CursorY, canvasTopEdge, 0 /* ? ? ? */);
-	//}
-}
-
-vec2 GetCursorPos_Pixel()
+vec2 GetCursorPos_Pixel(double cursorX, double cursorY)
 {
 	//return vec2(m_CursorX, m_CursorY);
-	int pixelX = m_CursorX;
-	int pixelY = m_CursorY - FrameHeight();
+	int pixelX = cursorX;
+	int pixelY = cursorY - FrameHeight();
 	return vec2(pixelX, pixelY);
 }
 
@@ -68,18 +37,17 @@ void SetupCanvas(int width, int height)
 	data = std::vector<GLubyte>(CanvasWidth * CanvasHeight * 4, 255);
 }
 
-void PaintAtPixelCoord()
+void PaintAtPixelCoord(double cursorX, double cursorY, int brushSize)
 {
-	if (m_CursorX < 0 || m_CursorX >= CanvasWidth
-		|| m_CursorY < FrameHeight() || m_CursorY >= (m_WindowHeight - FrameHeight()))
+	if (cursorX < 0 || cursorX >= CanvasWidth
+		|| cursorY < FrameHeight() || cursorY >= (m_WindowHeight - FrameHeight()))
 	{
 		return;
 	}
 
-	int pixelX = m_CursorX;
-	int pixelY = m_CursorY - FrameHeight();
+	int pixelX = cursorX;
+	int pixelY = cursorY - FrameHeight();
 
-	unsigned int brushSize = 40;
 	unsigned int halfSize = brushSize / 2;
 	bool isPair = brushSize % 2 == 0;
 	int topLeftX = isPair ? pixelX - halfSize + 1 : pixelX - halfSize;

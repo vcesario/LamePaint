@@ -28,7 +28,7 @@ To do:
 - [] Simple round brush (black ink on white canvas)
     - [x] Create texture and load it into memory
     - [x] draw circles around mouse position directly to texture that is already loaded
-    - [] do the above while clicking
+    - [x] do the above while clicking
     - [] While dragging, draw "lines" (as squares) between the circles
 - [] Colored round brush (numbers change color as debug)
     - [] fix colors (black brush is kinda greyish right now)

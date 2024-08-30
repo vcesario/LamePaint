@@ -15,6 +15,10 @@
 const int STARTING_W = 800;
 const int STARTING_H = 600;
 
+double CursorX;
+double CursorY;
+bool IsClicking;
+
 void OnCursorMoved_Callback(GLFWwindow* window, double xpos, double ypos);
 void OnMouseClicked_Callback(GLFWwindow* window, int button, int action, int mods);
 
@@ -139,11 +143,12 @@ int main()
 	while (!glfwWindowShouldClose(window))
 	{
 		// app logic
-		vec2 pixelCoord = GetCursorPos_Pixel();
-
-		PaintAtPixelCoord();
-
-		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, CanvasWidth, CanvasHeight, GL_RGBA, GL_UNSIGNED_BYTE, &data[0]);
+		vec2 pixelCoord = GetCursorPos_Pixel(CursorX, CursorY);
+		if (IsClicking)
+		{
+			PaintAtPixelCoord(CursorX, CursorY, 20);
+			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, CanvasWidth, CanvasHeight, GL_RGBA, GL_UNSIGNED_BYTE, &data[0]);
+		}
 
 		// app render
 		glClear(GL_COLOR_BUFFER_BIT);
@@ -158,7 +163,7 @@ int main()
 
 		glfwPollEvents();
 	}
-	
+
 	// terminate imgui
 	TerminateUI();
 
@@ -168,10 +173,15 @@ int main()
 
 void OnCursorMoved_Callback(GLFWwindow* window, double xpos, double ypos)
 {
-	UpdateCursorPos(xpos, ypos);
+	CursorX = xpos;
+	CursorY = ypos;
 }
 
 void OnMouseClicked_Callback(GLFWwindow* window, int button, int action, int mods)
 {
 	std::cout << button << ", " << action << ", " << mods << std::endl;
+	if (button == 0)
+	{
+		IsClicking = action;
+	}
 }
