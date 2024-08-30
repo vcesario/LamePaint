@@ -179,7 +179,7 @@ void OnCursorMoved_Callback(GLFWwindow* window, double xpos, double ypos)
 
 void OnMouseClicked_Callback(GLFWwindow* window, int button, int action, int mods)
 {
-	std::cout << button << ", " << action << ", " << mods << std::endl;
+	//std::cout << button << ", " << action << ", " << mods << std::endl;
 	if (button == 0)
 	{
 		IsClicking = action;

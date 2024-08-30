@@ -1,0 +1,9 @@
+Drawing lines
+
+Store the starting point and the end point...
+
+
+Refs:
+
+- https://stackoverflow.com/questions/1222713/how-do-i-create-a-line-of-arbitrary-thickness-using-bresenham
+- http://homepages.enterprise.net/murphy/thickline/index.html
