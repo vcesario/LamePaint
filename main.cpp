@@ -17,7 +17,11 @@ const int STARTING_H = 600;
 
 double CursorX;
 double CursorY;
+double CursorX_LastFrame;
+double CursorY_LastFrame;
 bool IsClicking;
+bool IsDragging;
+bool ClickDownConsumed;
 
 void OnCursorMoved_Callback(GLFWwindow* window, double xpos, double ypos);
 void OnMouseClicked_Callback(GLFWwindow* window, int button, int action, int mods);
@@ -40,6 +44,7 @@ int main()
 	glfwMakeContextCurrent(window);
 
 	//glfwSwapInterval(0); // vsync off - useful to understand app performance even if above 60fps
+	//glfwSwapInterval(1); // vsync on - needed for my personal notebook's screen, it seems
 
 	glfwSetCursorPosCallback(window, OnCursorMoved_Callback);
 	glfwSetMouseButtonCallback(window, OnMouseClicked_Callback);
@@ -146,8 +151,20 @@ int main()
 		vec2 pixelCoord = GetCursorPos_Pixel(CursorX, CursorY);
 		if (IsClicking)
 		{
-			PaintAtPixelCoord(CursorX, CursorY, 20);
-			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, CanvasWidth, CanvasHeight, GL_RGBA, GL_UNSIGNED_BYTE, &data[0]);
+			int brushSize = 10;
+			if (IsDragging)
+			{
+				PaintRectangle(CursorX_LastFrame, CursorY_LastFrame, CursorX, CursorY, brushSize);
+				PaintAtPixelCoord(CursorX, CursorY, brushSize);
+				glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, CanvasWidth, CanvasHeight, GL_RGBA, GL_UNSIGNED_BYTE, &data[0]);
+			}
+			else if (!ClickDownConsumed)
+			{
+				PaintAtPixelCoord(CursorX, CursorY, brushSize);
+				glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, CanvasWidth, CanvasHeight, GL_RGBA, GL_UNSIGNED_BYTE, &data[0]);
+
+				ClickDownConsumed = true;
+			}
 		}
 
 		// app render
@@ -173,8 +190,17 @@ int main()
 
 void OnCursorMoved_Callback(GLFWwindow* window, double xpos, double ypos)
 {
+	CursorX_LastFrame = CursorX;
+	CursorY_LastFrame = CursorY;
+
 	CursorX = xpos;
 	CursorY = ypos;
+
+	IsDragging = IsClicking;
+	if (IsDragging)
+	{
+		ClickDownConsumed = true;
+	}
 }
 
 void OnMouseClicked_Callback(GLFWwindow* window, int button, int action, int mods)
@@ -183,5 +209,10 @@ void OnMouseClicked_Callback(GLFWwindow* window, int button, int action, int mod
 	if (button == 0)
 	{
 		IsClicking = action;
+
+		if (action == 0)
+		{
+			ClickDownConsumed = false;
+		}
 	}
 }
