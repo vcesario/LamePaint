@@ -12,8 +12,8 @@
 #include <vector>
 #include "imgui/imgui.h"
 
-const int STARTING_W = 800;
-const int STARTING_H = 600;
+const int STARTING_WINDOW_W = 800;
+const int STARTING_WINDOW_H = 600;
 
 double CursorX;
 double CursorY;
@@ -34,7 +34,7 @@ int main()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	GLFWwindow* window = glfwCreateWindow(STARTING_W, STARTING_H, "Learn OpenGL", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(STARTING_WINDOW_W, STARTING_WINDOW_H, "Learn OpenGL", NULL, NULL);
 	if (window == NULL)
 	{
 		std::cout << "Failed to create window" << std::endl;
@@ -59,7 +59,7 @@ int main()
 	InitUI(window);
 	ImGuiIO& io = ImGui::GetIO(); // wanted to do this inside InitUI() but I don't know how to properly make it global
 
-	SetupCanvas(STARTING_W, STARTING_H);
+	SetupCanvas(STARTING_WINDOW_W, STARTING_WINDOW_H);
 
 	Shader shader("sh.vert", "sh.frag");
 	shader.use();
@@ -103,11 +103,13 @@ int main()
 	//GLuint clearColor[4] = { 0, 0, 0, 0 };
 
 	// setup screen quad
+	float framePercent = (float)FrameHeight() / (float)STARTING_WINDOW_H;
+	float canvasEdgeAnchor = (1 - framePercent) * 2 - 1;
 	float vertices[] = {
-		-0.8f, -0.8f, 0.0f, 0.0f, 1.0f, // top left
-		 0.8f, -0.8f, 0.0f, 1.0f, 1.0f, // top right
-		 0.8f,  0.8f, 0.0f, 1.0f, 0.0f, // bottom right
-		-0.8f,  0.8f, 0.0f, 0.0f, 0.0f, // bottom left
+		-1.0f,  canvasEdgeAnchor, 0.0f, 0.0f, 0.0f, // top left
+		 1.0f,  canvasEdgeAnchor, 0.0f, 1.0f, 0.0f, // top right
+		 1.0f, -canvasEdgeAnchor, 0.0f, 1.0f, 1.0f, // bottom right
+		-1.0f, -canvasEdgeAnchor, 0.0f, 0.0f, 1.0f, // bottom left
 	};
 	int indices[] = {
 		0, 1, 2,
@@ -142,7 +144,7 @@ int main()
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
 
-	glViewport(0, 0, STARTING_W, STARTING_H);
+	glViewport(0, 0, STARTING_WINDOW_W, STARTING_WINDOW_H);
 	glClearColor(0.3f, 0.7f, 0.1f, 1.0f);
 
 	while (!glfwWindowShouldClose(window))
@@ -151,7 +153,7 @@ int main()
 		vec2 pixelCoord = GetCursorPos_Pixel(CursorX, CursorY);
 		if (IsClicking)
 		{
-			int brushSize = 1;
+			int brushSize = 3;
 			if (IsDragging)
 			{
 				PaintRectangle(CursorX_LastFrame, CursorY_LastFrame, CursorX, CursorY, brushSize);

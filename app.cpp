@@ -28,13 +28,13 @@ vec2 GetCursorPos_Pixel(double cursorX, double cursorY)
 	return vec2(pixelX, pixelY);
 }
 
-void SetupCanvas(int width, int height)
+void SetupCanvas(int windowWidth, int windowHeight)
 {
-	m_WindowWidth = width;
-	m_WindowHeight = height;
+	m_WindowWidth = windowWidth;
+	m_WindowHeight = windowHeight;
 
-	CanvasWidth = width;
-	CanvasHeight = height - FrameHeight() * 2;
+	CanvasWidth = windowWidth;
+	CanvasHeight = windowHeight - FrameHeight() * 2;
 
 	data = std::vector<GLubyte>(CanvasWidth * CanvasHeight * 4, 255);
 }
