@@ -151,7 +151,7 @@ int main()
 		vec2 pixelCoord = GetCursorPos_Pixel(CursorX, CursorY);
 		if (IsClicking)
 		{
-			int brushSize = 10;
+			int brushSize = 1;
 			if (IsDragging)
 			{
 				PaintRectangle(CursorX_LastFrame, CursorY_LastFrame, CursorX, CursorY, brushSize);

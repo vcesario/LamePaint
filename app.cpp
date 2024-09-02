@@ -167,9 +167,11 @@ void PaintRectangle(double cursorX_LastFrame, double cursorY_LastFrame, double c
 		return;
 	}
 
-	std::cout << std::fixed << std::setprecision(2) << "Drawing rectangle from (" << cursorX_LastFrame << ", " << cursorY_LastFrame << ") to ("
-		<< cursorX << ", " << cursorY << ")" << std::endl;
+	//std::cout << std::fixed << std::setprecision(2) << "Drawing rectangle from (" << cursorX_LastFrame << ", " << cursorY_LastFrame << ") to ("
+	//	<< cursorX << ", " << cursorY << ")" << std::endl;
 
+	int pixelX_LastFrame = cursorX_LastFrame;
+	int pixelY_LastFrame = cursorY_LastFrame - FrameHeight();
 	int pixelX = cursorX;
 	int pixelY = cursorY - FrameHeight();
 
@@ -181,7 +183,7 @@ void PaintRectangle(double cursorX_LastFrame, double cursorY_LastFrame, double c
 	// C is Cursor
 	// Clf is Cursor_LastFrame
 
-	vec3 a(cursorX - cursorX_LastFrame, cursorY - cursorY_LastFrame, 0);
+	vec3 a(pixelX - pixelX_LastFrame, pixelY - pixelY_LastFrame, 0);
 	vec3 b(0, 0, 1);
 
 	//cross product = (a2 * b3 – a3 * b2) * i + (a3 * b1 – a1 * b3) * j + (a1 * b2 – a2 * b1) * k
@@ -192,10 +194,10 @@ void PaintRectangle(double cursorX_LastFrame, double cursorY_LastFrame, double c
 
 	float halfBrush = (float)brushSize / 2.0f;
 	vec3 halfBrushVec(unit.x * halfBrush, unit.y * halfBrush, 0);
-	vec3 A(cursorX_LastFrame + halfBrushVec.x, cursorY_LastFrame + halfBrushVec.y, 0);
-	vec3 B(cursorX + halfBrushVec.x, cursorY + halfBrushVec.y, 0);
-	vec3 C(cursorX - halfBrushVec.x, cursorY - halfBrushVec.y, 0);
-	vec3 D(cursorX_LastFrame - halfBrushVec.x, cursorY_LastFrame - halfBrushVec.y, 0);
+	vec3 A(pixelX_LastFrame + halfBrushVec.x, pixelY_LastFrame + halfBrushVec.y, 0);
+	vec3 B(pixelX + halfBrushVec.x, pixelY + halfBrushVec.y, 0);
+	vec3 C(pixelX - halfBrushVec.x, pixelY - halfBrushVec.y, 0);
+	vec3 D(pixelX_LastFrame - halfBrushVec.x, pixelY_LastFrame - halfBrushVec.y, 0);
 
 	//std::cout /*<< std::fixed << std::setprecision(2)*/ << "v1: " << A << std::endl;
 	//std::cout /*<< std::fixed << std::setprecision(2)*/ << "v2: " << B << std::endl;

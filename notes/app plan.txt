@@ -29,7 +29,7 @@ To do:
     - [x] Create texture and load it into memory
     - [x] draw circles around mouse position directly to texture that is already loaded
     - [x] do the above while clicking
-    - [] While dragging, draw "lines" (as squares) between the circles
+    - [x] While dragging, draw "lines" (as squares) between the circles
 - [] Colored round brush (numbers change color as debug)
     - [] fix colors (black brush is kinda greyish right now. it's because of linear filtering... proper scaling of the texture should solve this, probably)
 - [] Tools layout
