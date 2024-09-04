@@ -33,20 +33,37 @@ To do:
 - [x] Colored round brush (numbers change color as debug)
     - [x] fix colors (black brush is kinda greyish right now. it's because of linear filtering... proper scaling of the texture should solve this, probably)
     - [x] pressing numbers change painting color
-- [] Tools layout
-- [] Functioning colors
-- [] Eraser
+- [] Tools
+    - [] Draggable tools menu with containing:
+        * Round brush (panel wide button)
+        * Eraser (panel wide button)
+        * Bucket (panel wide button)
+        * Brush size (Number box)
+        * Brush color palette (grid aligned squares of fixed size, can auto reorder depending on panel width)
+    - [] Functioning Eraser (it's just a second state brush)
+        - [] X key is a shortcut to swap between both
+    - [] Functioning brush size
+    - [] Functioning colors
+    - [] Menu icons
+    - [] Cursor customization
+    - [] Functioning bucket (maybe flood fill algo?)
 
 - [] Exit menu option
 - [] New menu option
 - [] Open menu option
 - [] Export menu option
 
-- [] Functioning bucket
+- [] Final code review
 
-Depending on how quick I do this, I could add:
+- [] Bugfixes
+    - [] Pixel coordinates shouldn't update while hovering top and bottom bars
+    - [] If I drag out of screen too fast, it discards the rectangle
+
+If I feel like it:
+- Fix bug where sometimes rectangles arent rasterized. Maybe a tool that draws in slowmo as it logs current steps on console....
 - Color picker
 - Zoom
 - Undo
+- Resize
 
 -----------------------------------------------------------------
