@@ -25,6 +25,7 @@ bool ClickDownConsumed;
 
 void OnCursorMoved_Callback(GLFWwindow* window, double xpos, double ypos);
 void OnMouseClicked_Callback(GLFWwindow* window, int button, int action, int mods);
+void OnKeyChanged_Callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
 int main()
 {
@@ -48,6 +49,7 @@ int main()
 
 	glfwSetCursorPosCallback(window, OnCursorMoved_Callback);
 	glfwSetMouseButtonCallback(window, OnMouseClicked_Callback);
+	glfwSetKeyCallback(window, OnKeyChanged_Callback);
 
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
@@ -215,6 +217,33 @@ void OnMouseClicked_Callback(GLFWwindow* window, int button, int action, int mod
 		if (action == 0)
 		{
 			ClickDownConsumed = false;
+		}
+	}
+}
+
+void OnKeyChanged_Callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+	//std::cout << key << ", " << scancode << ", " << action << ", " << mods << std::endl;
+
+	if (action == 1)
+	{
+		switch (key)
+		{
+		case 321: // numpad 1
+			SetBrushColor(Colors::Black);
+			break;
+		case 322:
+			SetBrushColor(Colors::White);
+			break;
+		case 323:
+			SetBrushColor(Colors::Red);
+			break;
+		case 324:
+			SetBrushColor(Colors::Green);
+			break;
+		case 325:
+			SetBrushColor(Colors::Blue);
+			break;
 		}
 	}
 }

@@ -27,6 +27,15 @@ struct vec3
 	}
 };
 
+enum class Colors
+{
+	Black,
+	White,
+	Red,
+	Green,
+	Blue,
+};
+
 extern int CanvasWidth;
 extern int CanvasHeight;
 extern std::vector<GLubyte> data;
@@ -36,3 +45,4 @@ vec2 GetCursorPos_Pixel(double cursorX, double cursorY);
 void SetupCanvas(int windowWidth, int windowHeight);
 void PaintAtPixelCoord(double cursorX, double cursorY, int brushSize);
 void PaintRectangle(double cursorX_LastFrame, double cursorY_LastFrame, double cursorX, double cursorY, int brushSize);
+void SetBrushColor(Colors newColor);

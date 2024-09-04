@@ -4,6 +4,29 @@
 #include <vector>
 #include <iostream>
 #include <iomanip>
+#include <map>
+
+
+struct vec3byte
+{
+	uint8_t x;
+	uint8_t y;
+	uint8_t z;
+
+	vec3byte()
+	{
+		this->x = 0;
+		this->y = 0;
+		this->z = 0;
+	}
+
+	vec3byte(uint8_t x, uint8_t y, uint8_t z)
+	{
+		this->x = x;
+		this->y = y;
+		this->z = z;
+	}
+};
 
 int m_WindowWidth;
 int m_WindowHeight;
@@ -12,6 +35,20 @@ int CanvasWidth;
 int CanvasHeight;
 
 std::vector<GLubyte> data;
+
+const vec3byte COLOR_BLACK(0, 0, 0);
+const vec3byte COLOR_WHITE(255, 255, 255);
+const vec3byte COLOR_RED(255, 0, 0);
+const vec3byte COLOR_GREEN(0, 255, 0);
+const vec3byte COLOR_BLUE(0, 0, 255);
+vec3byte m_BrushColor = COLOR_BLACK;
+std::map<Colors, vec3byte> m_ColorIdToVal = {
+	{Colors::Black, COLOR_BLACK},
+	{Colors::White, COLOR_WHITE},
+	{Colors::Red, COLOR_RED},
+	{Colors::Green, COLOR_GREEN},
+	{Colors::Blue, COLOR_BLUE},
+};
 
 bool IsPointWithinCircle(int pointX, int pointY, int centerX, int centerY, int r);
 
@@ -80,9 +117,9 @@ void PaintAtPixelCoord(double cursorX, double cursorY, int brushSize)
 		{
 			if (IsPointWithinCircle(i, j, pixelX, pixelY, halfSize))
 			{
-				data[j * CanvasWidth * 4 + i * 4] = 0; // R
-				data[j * CanvasWidth * 4 + i * 4 + 1] = 0; // G
-				data[j * CanvasWidth * 4 + i * 4 + 2] = 0; // B
+				data[j * CanvasWidth * 4 + i * 4] = m_BrushColor.x; // R
+				data[j * CanvasWidth * 4 + i * 4 + 1] = m_BrushColor.y; // G
+				data[j * CanvasWidth * 4 + i * 4 + 2] = m_BrushColor.z; // B
 				data[j * CanvasWidth * 4 + i * 4 + 3] = 255; // A
 			}
 		}
@@ -233,9 +270,9 @@ void PaintRectangle(double cursorX_LastFrame, double cursorY_LastFrame, double c
 						if (DAP >= 0)
 						{
 							// is inside quad, so draw pixel
-							data[j * CanvasWidth * 4 + i * 4] = 0; // R
-							data[j * CanvasWidth * 4 + i * 4 + 1] = 0; // G
-							data[j * CanvasWidth * 4 + i * 4 + 2] = 0; // B
+							data[j * CanvasWidth * 4 + i * 4] = m_BrushColor.x; // R
+							data[j * CanvasWidth * 4 + i * 4 + 1] = m_BrushColor.y; // G
+							data[j * CanvasWidth * 4 + i * 4 + 2] = m_BrushColor.z; // B
 							data[j * CanvasWidth * 4 + i * 4 + 3] = 255; // A
 						}
 					}
@@ -243,4 +280,9 @@ void PaintRectangle(double cursorX_LastFrame, double cursorY_LastFrame, double c
 			}
 		}
 	}
+}
+
+void SetBrushColor(Colors newColor)
+{
+	m_BrushColor = m_ColorIdToVal[newColor];
 }
