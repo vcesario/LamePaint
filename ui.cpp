@@ -108,8 +108,9 @@ void DrawBottomBar(int posX, int posY, float fps)
 	}
 }
 
-const ImVec2 m_ToolsWindowSize(120, 250);
-const ImVec2 m_ToolsWindowPos(650, 100);
+const ImVec2 m_ToolsWindowSize(150, 250);
+const ImVec2 m_ToolsWindowPos(800 - m_ToolsWindowSize.x - 20, 100);
+const ImVec2 m_ColorButtonSize(m_ToolsWindowSize.x / 2.0f, 24);
 static int m_BrushSize = 1;
 
 void DrawToolsWindow()
@@ -132,21 +133,33 @@ void DrawToolsWindow()
 	{
 		std::cout << "paint bucket selected" << std::endl;
 	}
-	ImGui::SliderInt("Brush size", &m_BrushSize, 1, 100);
+	ImGui::SliderInt("px", &m_BrushSize, 1, 100);
 
-	ImVec2 button_sz(24, 24);
-	ImGuiStyle& style = ImGui::GetStyle();
-	int buttons_count = 6;
-	float window_visible_x2 = ImGui::GetCursorScreenPos().x + ImGui::GetContentRegionAvail().x;
-	for (int n = 0; n < buttons_count; n++)
-	{
-		ImGui::PushID(n);
-		ImGui::Button("Box", button_sz);
-		float last_button_x2 = ImGui::GetItemRectMax().x;
-		float next_button_x2 = last_button_x2 + style.ItemSpacing.x + button_sz.x; // Expected position if next button was on same line
-		if (n + 1 < buttons_count && next_button_x2 < window_visible_x2)
-			ImGui::SameLine();
-		ImGui::PopID();
-	}
+	//ImVec2 button_sz(24, 24);
+	//ImGuiStyle& style = ImGui::GetStyle();
+	//int buttons_count = 6;
+	//float window_visible_x2 = ImGui::GetCursorScreenPos().x + ImGui::GetContentRegionAvail().x;
+	//for (int n = 0; n < buttons_count; n++)
+	//{
+	//	ImGui::PushID(n);
+	float buttonWidth = ImGui::GetContentRegionAvail().x / 2.0f - ImGui::GetStyle().FramePadding.x;
+	ImVec2 buttonSize(buttonWidth, 24);
+	ImGui::Button("Black", buttonSize);
+	ImGui::SameLine();
+	ImGui::Button("White", buttonSize);
+
+	ImGui::Button("Red", buttonSize);
+	ImGui::SameLine();
+	ImGui::Button("Green", buttonSize);
+
+	ImGui::Button("Blue", buttonSize);
+	ImGui::SameLine();
+	ImGui::Button("Yellow", buttonSize);
+	//	float last_button_x2 = ImGui::GetItemRectMax().x;
+	//	float next_button_x2 = last_button_x2 + style.ItemSpacing.x + button_sz.x; // Expected position if next button was on same line
+	//	if (n + 1 < buttons_count && next_button_x2 < window_visible_x2)
+	//		ImGui::SameLine();
+	//	ImGui::PopID();
+	//}
 	ImGui::End();
 }
