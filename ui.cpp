@@ -8,9 +8,11 @@
 #include <string>
 #include <sstream>
 #include <iomanip>
+#include <iostream>
 
 void DrawMainMenu();
 void DrawBottomBar(int mouseX, int mouseY, float fps);
+void DrawToolsWindow();
 
 void InitUI(GLFWwindow* window)
 {
@@ -39,6 +41,8 @@ void DrawUI(int pixelX, int pixelY, float framerate)
 
 	DrawMainMenu();
 	DrawBottomBar(pixelX, pixelY, framerate);
+
+	DrawToolsWindow();
 
 	// imgui render
 	ImGui::Render();
@@ -95,11 +99,54 @@ void DrawBottomBar(int posX, int posY, float fps)
 
 			std::string fpsText = stream.str();
 			ImVec2 textSize = ImGui::CalcTextSize(fpsText.c_str());
-			ImGui::Dummy({remainingWidth - textSize.x - 8, height});
+			ImGui::Dummy({ remainingWidth - textSize.x - 8, height });
 			ImGui::Text(fpsText.c_str());
 			ImGui::EndMenuBar();
 		}
 
 		ImGui::End();
 	}
+}
+
+const ImVec2 m_ToolsWindowSize(120, 250);
+const ImVec2 m_ToolsWindowPos(650, 100);
+static int m_BrushSize = 1;
+
+void DrawToolsWindow()
+{
+	ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize;
+
+	ImGui::Begin("Tools", NULL, window_flags);
+
+	ImGui::SetWindowSize(m_ToolsWindowSize, ImGuiCond_Once);
+	ImGui::SetWindowPos(m_ToolsWindowPos, ImGuiCond_Once);
+	if (ImGui::Button("Round brush"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
+	{
+		std::cout << "round brush selected" << std::endl;
+	}
+	if (ImGui::Button("Eraser"))
+	{
+		std::cout << "Eraser selected" << std::endl;
+	}
+	if (ImGui::Button("Paint bucket"))
+	{
+		std::cout << "paint bucket selected" << std::endl;
+	}
+	ImGui::SliderInt("Brush size", &m_BrushSize, 1, 100);
+
+	ImVec2 button_sz(24, 24);
+	ImGuiStyle& style = ImGui::GetStyle();
+	int buttons_count = 6;
+	float window_visible_x2 = ImGui::GetCursorScreenPos().x + ImGui::GetContentRegionAvail().x;
+	for (int n = 0; n < buttons_count; n++)
+	{
+		ImGui::PushID(n);
+		ImGui::Button("Box", button_sz);
+		float last_button_x2 = ImGui::GetItemRectMax().x;
+		float next_button_x2 = last_button_x2 + style.ItemSpacing.x + button_sz.x; // Expected position if next button was on same line
+		if (n + 1 < buttons_count && next_button_x2 < window_visible_x2)
+			ImGui::SameLine();
+		ImGui::PopID();
+	}
+	ImGui::End();
 }
