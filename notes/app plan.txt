@@ -34,7 +34,7 @@ To do:
     - [x] fix colors (black brush is kinda greyish right now. it's because of linear filtering... proper scaling of the texture should solve this, probably)
     - [x] pressing numbers change painting color
 - [] Tools
-    - [] Draggable tools menu with containing:
+    - [x] Draggable tools menu with containing:
         * Round brush (panel wide button)
         * Eraser (panel wide button)
         * Bucket (panel wide button)
@@ -58,6 +58,7 @@ To do:
 - [] Bugfixes
     - [] Pixel coordinates shouldn't update while hovering top and bottom bars
     - [] If I drag out of screen too fast, it discards the rectangle
+    - [] Tools menu should block drawing
 
 If I feel like it:
 - Fix bug where sometimes rectangles arent rasterized. Maybe a tool that draws in slowmo as it logs current steps on console....

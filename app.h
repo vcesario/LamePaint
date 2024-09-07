@@ -1,5 +1,6 @@
 #include <vector>
 #include <glad/glad.h>
+#include <map>
 
 struct vec2
 {
@@ -27,6 +28,27 @@ struct vec3
 	}
 };
 
+struct vec3byte
+{
+	uint8_t x;
+	uint8_t y;
+	uint8_t z;
+
+	vec3byte()
+	{
+		this->x = 0;
+		this->y = 0;
+		this->z = 0;
+	}
+
+	vec3byte(uint8_t x, uint8_t y, uint8_t z)
+	{
+		this->x = x;
+		this->y = y;
+		this->z = z;
+	}
+};
+
 enum class Colors
 {
 	Black,
@@ -34,11 +56,13 @@ enum class Colors
 	Red,
 	Green,
 	Blue,
+	Yellow,
 };
 
 extern int CanvasWidth;
 extern int CanvasHeight;
 extern std::vector<GLubyte> data;
+extern std::map<Colors, vec3byte> m_ColorIdToVal;
 
 int FrameHeight();
 vec2 GetCursorPos_Pixel(double cursorX, double cursorY);

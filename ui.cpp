@@ -1,4 +1,5 @@
 #include "ui.h"
+#include "app.h"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_internal.h"
@@ -121,45 +122,77 @@ void DrawToolsWindow()
 
 	ImGui::SetWindowSize(m_ToolsWindowSize, ImGuiCond_Once);
 	ImGui::SetWindowPos(m_ToolsWindowPos, ImGuiCond_Once);
-	if (ImGui::Button("Round brush"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
+
+	ImVec2 wideButtonSize(ImGui::GetContentRegionAvail().x, ImGui::GetFrameHeight());
+
+	if (ImGui::Button("Round brush", wideButtonSize))                            // Buttons return true when clicked (most widgets return true when edited/activated)
 	{
 		std::cout << "round brush selected" << std::endl;
 	}
-	if (ImGui::Button("Eraser"))
+	if (ImGui::Button("Eraser", wideButtonSize))
 	{
 		std::cout << "Eraser selected" << std::endl;
 	}
-	if (ImGui::Button("Paint bucket"))
+	if (ImGui::Button("Paint bucket", wideButtonSize))
 	{
 		std::cout << "paint bucket selected" << std::endl;
 	}
+
+	std::string sliderLabel = "px";
+	float sliderWidth = ImGui::GetContentRegionAvail().x - ImGui::CalcTextSize(sliderLabel.c_str()).x;
+	ImGui::SetNextItemWidth(sliderWidth);
 	ImGui::SliderInt("px", &m_BrushSize, 1, 100);
 
-	//ImVec2 button_sz(24, 24);
-	//ImGuiStyle& style = ImGui::GetStyle();
-	//int buttons_count = 6;
-	//float window_visible_x2 = ImGui::GetCursorScreenPos().x + ImGui::GetContentRegionAvail().x;
-	//for (int n = 0; n < buttons_count; n++)
-	//{
-	//	ImGui::PushID(n);
 	float buttonWidth = ImGui::GetContentRegionAvail().x / 2.0f - ImGui::GetStyle().FramePadding.x;
-	ImVec2 buttonSize(buttonWidth, 24);
-	ImGui::Button("Black", buttonSize);
-	ImGui::SameLine();
-	ImGui::Button("White", buttonSize);
+	ImVec2 colorButtonSize(buttonWidth, 24);
 
-	ImGui::Button("Red", buttonSize);
-	ImGui::SameLine();
-	ImGui::Button("Green", buttonSize);
+	vec3byte nextColor = m_ColorIdToVal[Colors::Black];
+	ImVec4 nextColor01 = ImVec4(nextColor.x / 255.0f, nextColor.y / 255.0f, nextColor.z / 255.0f, 1.0f);
+	ImGui::PushStyleColor(ImGuiCol_Button, nextColor01);
+	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, nextColor01);
+	ImGui::Button("1", colorButtonSize);
+	ImGui::PopStyleColor(2);
 
-	ImGui::Button("Blue", buttonSize);
 	ImGui::SameLine();
-	ImGui::Button("Yellow", buttonSize);
-	//	float last_button_x2 = ImGui::GetItemRectMax().x;
-	//	float next_button_x2 = last_button_x2 + style.ItemSpacing.x + button_sz.x; // Expected position if next button was on same line
-	//	if (n + 1 < buttons_count && next_button_x2 < window_visible_x2)
-	//		ImGui::SameLine();
-	//	ImGui::PopID();
-	//}
+
+	nextColor = m_ColorIdToVal[Colors::White];
+	nextColor01 = ImVec4(nextColor.x / 255.0f, nextColor.y / 255.0f, nextColor.z / 255.0f, 1.0f);
+	ImGui::PushStyleColor(ImGuiCol_Button, nextColor01);
+	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, nextColor01);
+	ImGui::Button("2", colorButtonSize);
+	ImGui::PopStyleColor(2);
+
+	nextColor = m_ColorIdToVal[Colors::Red];
+	nextColor01 = ImVec4(nextColor.x / 255.0f, nextColor.y / 255.0f, nextColor.z / 255.0f, 1.0f);
+	ImGui::PushStyleColor(ImGuiCol_Button, nextColor01);
+	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, nextColor01);
+	ImGui::Button("3", colorButtonSize);
+	ImGui::PopStyleColor(2);
+
+	ImGui::SameLine();
+
+	nextColor = m_ColorIdToVal[Colors::Green];
+	nextColor01 = ImVec4(nextColor.x / 255.0f, nextColor.y / 255.0f, nextColor.z / 255.0f, 1.0f);
+	ImGui::PushStyleColor(ImGuiCol_Button, nextColor01);
+	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, nextColor01);
+	ImGui::Button("4", colorButtonSize);
+	ImGui::PopStyleColor(2);
+
+	nextColor = m_ColorIdToVal[Colors::Blue];
+	nextColor01 = ImVec4(nextColor.x / 255.0f, nextColor.y / 255.0f, nextColor.z / 255.0f, 1.0f);
+	ImGui::PushStyleColor(ImGuiCol_Button, nextColor01);
+	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, nextColor01);
+	ImGui::Button("5", colorButtonSize);
+	ImGui::PopStyleColor(2);
+
+	ImGui::SameLine();
+
+	nextColor = m_ColorIdToVal[Colors::Yellow];
+	nextColor01 = ImVec4(nextColor.x / 255.0f, nextColor.y / 255.0f, nextColor.z / 255.0f, 1.0f);
+	ImGui::PushStyleColor(ImGuiCol_Button, nextColor01);
+	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, nextColor01);
+	ImGui::Button("6", colorButtonSize);
+	ImGui::PopStyleColor(2);
+	
 	ImGui::End();
 }

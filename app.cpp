@@ -1,32 +1,10 @@
 #include "app.h"
+
 #include <GLFW/glfw3.h>
 #include "imgui/imgui.h"
 #include <vector>
 #include <iostream>
 #include <iomanip>
-#include <map>
-
-
-struct vec3byte
-{
-	uint8_t x;
-	uint8_t y;
-	uint8_t z;
-
-	vec3byte()
-	{
-		this->x = 0;
-		this->y = 0;
-		this->z = 0;
-	}
-
-	vec3byte(uint8_t x, uint8_t y, uint8_t z)
-	{
-		this->x = x;
-		this->y = y;
-		this->z = z;
-	}
-};
 
 int m_WindowWidth;
 int m_WindowHeight;
@@ -41,6 +19,7 @@ const vec3byte COLOR_WHITE(255, 255, 255);
 const vec3byte COLOR_RED(255, 0, 0);
 const vec3byte COLOR_GREEN(0, 255, 0);
 const vec3byte COLOR_BLUE(0, 0, 255);
+const vec3byte COLOR_YELLOW(240, 200, 0);
 vec3byte m_BrushColor = COLOR_BLACK;
 std::map<Colors, vec3byte> m_ColorIdToVal = {
 	{Colors::Black, COLOR_BLACK},
@@ -48,6 +27,7 @@ std::map<Colors, vec3byte> m_ColorIdToVal = {
 	{Colors::Red, COLOR_RED},
 	{Colors::Green, COLOR_GREEN},
 	{Colors::Blue, COLOR_BLUE},
+	{Colors::Yellow, COLOR_YELLOW},
 };
 
 bool IsPointWithinCircle(int pointX, int pointY, int centerX, int centerY, int r);
