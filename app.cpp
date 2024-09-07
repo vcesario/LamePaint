@@ -20,7 +20,7 @@ const vec3byte COLOR_RED(255, 0, 0);
 const vec3byte COLOR_GREEN(0, 255, 0);
 const vec3byte COLOR_BLUE(0, 0, 255);
 const vec3byte COLOR_YELLOW(240, 200, 0);
-vec3byte m_BrushColor = COLOR_BLACK;
+
 std::map<Colors, vec3byte> m_ColorIdToVal = {
 	{Colors::Black, COLOR_BLACK},
 	{Colors::White, COLOR_WHITE},
@@ -29,6 +29,16 @@ std::map<Colors, vec3byte> m_ColorIdToVal = {
 	{Colors::Blue, COLOR_BLUE},
 	{Colors::Yellow, COLOR_YELLOW},
 };
+
+enum class BrushModes
+{
+	DEFAULT,
+	ERASER,
+};
+
+vec3byte m_BrushColor = COLOR_BLACK;
+vec3byte m_EraserColor = COLOR_WHITE;
+BrushModes m_CurrentMode = BrushModes::DEFAULT;
 
 bool IsPointWithinCircle(int pointX, int pointY, int centerX, int centerY, int r);
 
@@ -97,9 +107,19 @@ void PaintAtPixelCoord(double cursorX, double cursorY, int brushSize)
 		{
 			if (IsPointWithinCircle(i, j, pixelX, pixelY, halfSize))
 			{
-				data[j * CanvasWidth * 4 + i * 4] = m_BrushColor.x; // R
-				data[j * CanvasWidth * 4 + i * 4 + 1] = m_BrushColor.y; // G
-				data[j * CanvasWidth * 4 + i * 4 + 2] = m_BrushColor.z; // B
+				if (m_CurrentMode == BrushModes::DEFAULT)
+				{
+					data[j * CanvasWidth * 4 + i * 4] = m_BrushColor.x; // R
+					data[j * CanvasWidth * 4 + i * 4 + 1] = m_BrushColor.y; // G
+					data[j * CanvasWidth * 4 + i * 4 + 2] = m_BrushColor.z; // B
+				}
+				else // mode = eraser
+				{
+					data[j * CanvasWidth * 4 + i * 4] = m_EraserColor.x; // R
+					data[j * CanvasWidth * 4 + i * 4 + 1] = m_EraserColor.y; // G
+					data[j * CanvasWidth * 4 + i * 4 + 2] = m_EraserColor.z; // B
+				}
+
 				data[j * CanvasWidth * 4 + i * 4 + 3] = 255; // A
 			}
 		}
@@ -230,7 +250,7 @@ void PaintRectangle(double cursorX_LastFrame, double cursorY_LastFrame, double c
 	boxLeft = Clamp(boxLeft, 0, CanvasWidth - 1);
 	boxRight = Clamp(boxRight, 0, CanvasWidth - 1);
 	boxTop = Clamp(boxTop, 0, CanvasHeight - 1);
-	boxBottom = Clamp(boxBottom, 0, CanvasHeight- 1);
+	boxBottom = Clamp(boxBottom, 0, CanvasHeight - 1);
 
 	for (int i = boxLeft; i < boxRight; i++)
 	{
@@ -250,9 +270,19 @@ void PaintRectangle(double cursorX_LastFrame, double cursorY_LastFrame, double c
 						if (DAP >= 0)
 						{
 							// is inside quad, so draw pixel
-							data[j * CanvasWidth * 4 + i * 4] = m_BrushColor.x; // R
-							data[j * CanvasWidth * 4 + i * 4 + 1] = m_BrushColor.y; // G
-							data[j * CanvasWidth * 4 + i * 4 + 2] = m_BrushColor.z; // B
+							if (m_CurrentMode == BrushModes::DEFAULT)
+							{
+								data[j * CanvasWidth * 4 + i * 4] = m_BrushColor.x; // R
+								data[j * CanvasWidth * 4 + i * 4 + 1] = m_BrushColor.y; // G
+								data[j * CanvasWidth * 4 + i * 4 + 2] = m_BrushColor.z; // B
+							}
+							else // mode = eraser
+							{
+								data[j * CanvasWidth * 4 + i * 4] = m_EraserColor.x; // R
+								data[j * CanvasWidth * 4 + i * 4 + 1] = m_EraserColor.y; // G
+								data[j * CanvasWidth * 4 + i * 4 + 2] = m_EraserColor.z; // B
+							}
+
 							data[j * CanvasWidth * 4 + i * 4 + 3] = 255; // A
 						}
 					}
@@ -264,5 +294,22 @@ void PaintRectangle(double cursorX_LastFrame, double cursorY_LastFrame, double c
 
 void SetBrushColor(Colors newColor)
 {
-	m_BrushColor = m_ColorIdToVal[newColor];
+	if (m_CurrentMode == BrushModes::DEFAULT)
+	{
+		m_BrushColor = m_ColorIdToVal[newColor];
+	}
+	else // mode == eraser
+	{
+		m_EraserColor = m_ColorIdToVal[newColor];
+	}
+}
+
+void SetModeToDefault()
+{
+	m_CurrentMode = BrushModes::DEFAULT;
+}
+
+void SetModeToEraser()
+{
+	m_CurrentMode = BrushModes::ERASER;
 }

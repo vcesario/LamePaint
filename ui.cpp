@@ -127,11 +127,13 @@ void DrawToolsWindow()
 
 	if (ImGui::Button("Round brush", wideButtonSize))                            // Buttons return true when clicked (most widgets return true when edited/activated)
 	{
-		std::cout << "round brush selected" << std::endl;
+		//std::cout << "round brush selected" << std::endl;
+		SetModeToDefault();
 	}
 	if (ImGui::Button("Eraser", wideButtonSize))
 	{
-		std::cout << "Eraser selected" << std::endl;
+		//std::cout << "Eraser selected" << std::endl;
+		SetModeToEraser();
 	}
 	if (ImGui::Button("Paint bucket", wideButtonSize))
 	{
