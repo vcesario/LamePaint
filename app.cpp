@@ -38,6 +38,10 @@ enum class BrushModes
 
 vec3byte m_BrushColor = COLOR_BLACK;
 vec3byte m_EraserColor = COLOR_WHITE;
+
+int m_BrushSize = 1;
+int m_EraserSize = 1;
+
 BrushModes m_CurrentMode = BrushModes::DEFAULT;
 
 bool IsPointWithinCircle(int pointX, int pointY, int centerX, int centerY, int r);
@@ -66,8 +70,10 @@ void SetupCanvas(int windowWidth, int windowHeight)
 	data = std::vector<GLubyte>(CanvasWidth * CanvasHeight * 4, 255);
 }
 
-void PaintAtPixelCoord(double cursorX, double cursorY, int brushSize)
+void PaintAtPixelCoord(double cursorX, double cursorY)
 {
+	int brushSize = m_CurrentMode == BrushModes::DEFAULT ? m_BrushSize : m_EraserSize;
+
 	if (cursorX < 0 || cursorX >= CanvasWidth
 		|| cursorY < FrameHeight() || cursorY >= (m_WindowHeight - FrameHeight()))
 	{
@@ -196,8 +202,10 @@ double Clamp(double value, double min, double max)
 	}
 	return value;
 }
-void PaintRectangle(double cursorX_LastFrame, double cursorY_LastFrame, double cursorX, double cursorY, int brushSize)
+void PaintRectangle(double cursorX_LastFrame, double cursorY_LastFrame, double cursorX, double cursorY)
 {
+	int brushSize = m_CurrentMode == BrushModes::DEFAULT ? m_BrushSize : m_EraserSize;
+
 	if (cursorX < 0 || cursorX >= CanvasWidth
 		|| cursorY < FrameHeight() || cursorY >= (m_WindowHeight - FrameHeight()))
 	{
@@ -314,14 +322,31 @@ void SetModeToEraser()
 	m_CurrentMode = BrushModes::ERASER;
 }
 
-void SwapMode()
+void SwapBrushMode()
 {
 	if (m_CurrentMode == BrushModes::DEFAULT)
 	{
 		m_CurrentMode = BrushModes::ERASER;
 	}
-	else
+	else // mode == eraser
 	{
 		m_CurrentMode = BrushModes::DEFAULT;
 	}
+}
+
+void SetBrushSize(int size)
+{
+	if (m_CurrentMode == BrushModes::DEFAULT)
+	{
+		m_BrushSize = size;
+	}
+	else // mode == eraser
+	{
+		m_EraserSize = size;
+	}
+}
+
+int GetBrushSize()
+{
+	return m_CurrentMode == BrushModes::DEFAULT ? m_BrushSize : m_EraserSize;
 }

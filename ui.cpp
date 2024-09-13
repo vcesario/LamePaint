@@ -15,6 +15,11 @@ void DrawMainMenu();
 void DrawBottomBar(int mouseX, int mouseY, float fps);
 void DrawToolsWindow();
 
+const ImVec2 m_ToolsWindowSize(150, 250);
+const ImVec2 m_ToolsWindowPos(800 - m_ToolsWindowSize.x - 20, 100);
+const ImVec2 m_ColorButtonSize(m_ToolsWindowSize.x / 2.0f, 24);
+static int m_BrushSize = 1;
+
 void InitUI(GLFWwindow* window)
 {
 	// setup imgui
@@ -109,11 +114,6 @@ void DrawBottomBar(int posX, int posY, float fps)
 	}
 }
 
-const ImVec2 m_ToolsWindowSize(150, 250);
-const ImVec2 m_ToolsWindowPos(800 - m_ToolsWindowSize.x - 20, 100);
-const ImVec2 m_ColorButtonSize(m_ToolsWindowSize.x / 2.0f, 24);
-static int m_BrushSize = 1;
-
 void DrawToolsWindow()
 {
 	ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize;
@@ -129,21 +129,26 @@ void DrawToolsWindow()
 	{
 		//std::cout << "round brush selected" << std::endl;
 		SetModeToDefault();
+		SetUIBrushSlider(GetBrushSize());
 	}
 	if (ImGui::Button("Eraser", wideButtonSize))
 	{
 		//std::cout << "Eraser selected" << std::endl;
 		SetModeToEraser();
+		SetUIBrushSlider(GetBrushSize());
 	}
 	if (ImGui::Button("Paint bucket", wideButtonSize))
 	{
 		std::cout << "paint bucket selected" << std::endl;
 	}
 
-	std::string sliderLabel = "px";
-	float sliderWidth = ImGui::GetContentRegionAvail().x - ImGui::CalcTextSize(sliderLabel.c_str()).x;
+	char sliderLabel[] = "px\0";
+	float sliderWidth = ImGui::GetContentRegionAvail().x - ImGui::CalcTextSize(sliderLabel).x;
 	ImGui::SetNextItemWidth(sliderWidth);
-	ImGui::SliderInt("px", &m_BrushSize, 1, 100);
+	if (ImGui::SliderInt(sliderLabel, &m_BrushSize, 1, 100))
+	{
+		SetBrushSize(m_BrushSize);
+	}
 
 	float buttonWidth = ImGui::GetContentRegionAvail().x / 2.0f - ImGui::GetStyle().FramePadding.x;
 	ImVec2 colorButtonSize(buttonWidth, 24);
@@ -197,4 +202,9 @@ void DrawToolsWindow()
 	ImGui::PopStyleColor(2);
 	
 	ImGui::End();
+}
+
+void SetUIBrushSlider(int value)
+{
+	m_BrushSize = value;
 }

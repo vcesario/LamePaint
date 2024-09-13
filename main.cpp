@@ -155,16 +155,15 @@ int main()
 		vec2 pixelCoord = GetCursorPos_Pixel(CursorX, CursorY);
 		if (IsClicking)
 		{
-			int brushSize = 3;
 			if (IsDragging)
 			{
-				PaintRectangle(CursorX_LastFrame, CursorY_LastFrame, CursorX, CursorY, brushSize);
-				PaintAtPixelCoord(CursorX, CursorY, brushSize);
+				PaintRectangle(CursorX_LastFrame, CursorY_LastFrame, CursorX, CursorY);
+				PaintAtPixelCoord(CursorX, CursorY);
 				glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, CanvasWidth, CanvasHeight, GL_RGBA, GL_UNSIGNED_BYTE, &data[0]);
 			}
 			else if (!ClickDownConsumed)
 			{
-				PaintAtPixelCoord(CursorX, CursorY, brushSize);
+				PaintAtPixelCoord(CursorX, CursorY);
 				glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, CanvasWidth, CanvasHeight, GL_RGBA, GL_UNSIGNED_BYTE, &data[0]);
 
 				ClickDownConsumed = true;
@@ -230,7 +229,8 @@ void OnKeyChanged_Callback(GLFWwindow* window, int key, int scancode, int action
 		switch (key)
 		{
 		case 88: // X
-			SwapMode();
+			SwapBrushMode();
+			SetUIBrushSlider(GetBrushSize());
 			break;
 		case 321: // numpad 1
 			SetBrushColor(Colors::Black);

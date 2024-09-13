@@ -43,7 +43,7 @@ To do:
     - [x] Functioning Eraser 
         - [x] Add "eraser" (it's just a second state brush)
         - [x] X key is a shortcut to swap between both
-    - [] Functioning brush size
+    - [x] Functioning brush size
     - [] Functioning colors
     - [] Menu icons
     - [] Cursor customization
