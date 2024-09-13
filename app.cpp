@@ -313,3 +313,15 @@ void SetModeToEraser()
 {
 	m_CurrentMode = BrushModes::ERASER;
 }
+
+void SwapMode()
+{
+	if (m_CurrentMode == BrushModes::DEFAULT)
+	{
+		m_CurrentMode = BrushModes::ERASER;
+	}
+	else
+	{
+		m_CurrentMode = BrushModes::DEFAULT;
+	}
+}

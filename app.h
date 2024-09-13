@@ -72,3 +72,4 @@ void PaintRectangle(double cursorX_LastFrame, double cursorY_LastFrame, double c
 void SetBrushColor(Colors newColor);
 void SetModeToDefault();
 void SetModeToEraser();
+void SwapMode();

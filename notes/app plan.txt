@@ -40,9 +40,9 @@ To do:
         * Bucket (panel wide button)
         * Brush size (Number box)
         * Brush color palette (grid aligned squares of fixed size, can auto reorder depending on panel width)
-    - [] Functioning Eraser 
+    - [x] Functioning Eraser 
         - [x] Add "eraser" (it's just a second state brush)
-        - [] X key is a shortcut to swap between both
+        - [x] X key is a shortcut to swap between both
     - [] Functioning brush size
     - [] Functioning colors
     - [] Menu icons

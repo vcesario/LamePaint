@@ -229,6 +229,9 @@ void OnKeyChanged_Callback(GLFWwindow* window, int key, int scancode, int action
 	{
 		switch (key)
 		{
+		case 88: // X
+			SwapMode();
+			break;
 		case 321: // numpad 1
 			SetBrushColor(Colors::Black);
 			break;
@@ -241,7 +244,7 @@ void OnKeyChanged_Callback(GLFWwindow* window, int key, int scancode, int action
 		case 324:
 			SetBrushColor(Colors::Green);
 			break;
-		case 325:
+		case 325: // numpad 5
 			SetBrushColor(Colors::Blue);
 			break;
 		}
