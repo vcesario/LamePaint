@@ -232,21 +232,21 @@ void OnKeyChanged_Callback(GLFWwindow* window, int key, int scancode, int action
 			SwapBrushMode();
 			SetUIBrushSlider(GetBrushSize());
 			break;
-		case 321: // numpad 1
-			SetBrushColor(Colors::Black);
-			break;
-		case 322:
-			SetBrushColor(Colors::White);
-			break;
-		case 323:
-			SetBrushColor(Colors::Red);
-			break;
-		case 324:
-			SetBrushColor(Colors::Green);
-			break;
-		case 325: // numpad 5
-			SetBrushColor(Colors::Blue);
-			break;
+		//case 321: // numpad 1
+		//	SetBrushColor(Colors::Black);
+		//	break;
+		//case 322:
+		//	SetBrushColor(Colors::White);
+		//	break;
+		//case 323:
+		//	SetBrushColor(Colors::Red);
+		//	break;
+		//case 324:
+		//	SetBrushColor(Colors::Green);
+		//	break;
+		//case 325: // numpad 5
+		//	SetBrushColor(Colors::Blue);
+		//	break;
 		}
 	}
 }

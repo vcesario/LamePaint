@@ -44,7 +44,7 @@ To do:
         - [x] Add "eraser" (it's just a second state brush)
         - [x] X key is a shortcut to swap between both
     - [x] Functioning brush size
-    - [] Functioning colors
+    - [x] Functioning colors
     - [] Menu icons
     - [] Cursor customization
     - [] Functioning bucket (maybe flood fill algo?)
@@ -55,6 +55,10 @@ To do:
 - [] Export menu option
 
 - [] Final code review
+    - [] update to C++20 to use new std::format
+    - [] Better separation of concerns to improve extensibility. Namespaces, maybe UI could have its own class?
+    - [] Refactor UI palette drawing to remove duplicate code
+    - [] Refactor vector math in rasterization algo
 
 - [] Bugfixes
     - [] Pixel coordinates shouldn't update while hovering top and bottom bars

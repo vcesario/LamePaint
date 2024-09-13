@@ -39,8 +39,8 @@ enum class BrushModes
 vec3byte m_BrushColor = COLOR_BLACK;
 vec3byte m_EraserColor = COLOR_WHITE;
 
-int m_BrushSize = 1;
-int m_EraserSize = 1;
+int m_BrushSize = 5;
+int m_EraserSize = 3;
 
 BrushModes m_CurrentMode = BrushModes::DEFAULT;
 

@@ -18,7 +18,7 @@ void DrawToolsWindow();
 const ImVec2 m_ToolsWindowSize(150, 250);
 const ImVec2 m_ToolsWindowPos(800 - m_ToolsWindowSize.x - 20, 100);
 const ImVec2 m_ColorButtonSize(m_ToolsWindowSize.x / 2.0f, 24);
-static int m_BrushSize = 1;
+static int m_BrushSize = 5;
 
 void InitUI(GLFWwindow* window)
 {
@@ -157,7 +157,10 @@ void DrawToolsWindow()
 	ImVec4 nextColor01 = ImVec4(nextColor.x / 255.0f, nextColor.y / 255.0f, nextColor.z / 255.0f, 1.0f);
 	ImGui::PushStyleColor(ImGuiCol_Button, nextColor01);
 	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, nextColor01);
-	ImGui::Button("1", colorButtonSize);
+	if (ImGui::Button("1", colorButtonSize))
+	{
+		SetBrushColor(Colors::Black);
+	}
 	ImGui::PopStyleColor(2);
 
 	ImGui::SameLine();
@@ -166,14 +169,20 @@ void DrawToolsWindow()
 	nextColor01 = ImVec4(nextColor.x / 255.0f, nextColor.y / 255.0f, nextColor.z / 255.0f, 1.0f);
 	ImGui::PushStyleColor(ImGuiCol_Button, nextColor01);
 	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, nextColor01);
-	ImGui::Button("2", colorButtonSize);
+	if (ImGui::Button("2", colorButtonSize))
+	{
+		SetBrushColor(Colors::White);
+	}
 	ImGui::PopStyleColor(2);
 
 	nextColor = m_ColorIdToVal[Colors::Red];
 	nextColor01 = ImVec4(nextColor.x / 255.0f, nextColor.y / 255.0f, nextColor.z / 255.0f, 1.0f);
 	ImGui::PushStyleColor(ImGuiCol_Button, nextColor01);
 	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, nextColor01);
-	ImGui::Button("3", colorButtonSize);
+	if (ImGui::Button("3", colorButtonSize))
+	{
+		SetBrushColor(Colors::Red);
+	}
 	ImGui::PopStyleColor(2);
 
 	ImGui::SameLine();
@@ -182,14 +191,20 @@ void DrawToolsWindow()
 	nextColor01 = ImVec4(nextColor.x / 255.0f, nextColor.y / 255.0f, nextColor.z / 255.0f, 1.0f);
 	ImGui::PushStyleColor(ImGuiCol_Button, nextColor01);
 	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, nextColor01);
-	ImGui::Button("4", colorButtonSize);
+	if (ImGui::Button("4", colorButtonSize))
+	{
+		SetBrushColor(Colors::Green);
+	}
 	ImGui::PopStyleColor(2);
 
 	nextColor = m_ColorIdToVal[Colors::Blue];
 	nextColor01 = ImVec4(nextColor.x / 255.0f, nextColor.y / 255.0f, nextColor.z / 255.0f, 1.0f);
 	ImGui::PushStyleColor(ImGuiCol_Button, nextColor01);
 	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, nextColor01);
-	ImGui::Button("5", colorButtonSize);
+	if (ImGui::Button("5", colorButtonSize))
+	{
+		SetBrushColor(Colors::Blue);
+	}
 	ImGui::PopStyleColor(2);
 
 	ImGui::SameLine();
@@ -198,9 +213,12 @@ void DrawToolsWindow()
 	nextColor01 = ImVec4(nextColor.x / 255.0f, nextColor.y / 255.0f, nextColor.z / 255.0f, 1.0f);
 	ImGui::PushStyleColor(ImGuiCol_Button, nextColor01);
 	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, nextColor01);
-	ImGui::Button("6", colorButtonSize);
+	if (ImGui::Button("6", colorButtonSize))
+	{
+		SetBrushColor(Colors::Yellow);
+	}
 	ImGui::PopStyleColor(2);
-	
+
 	ImGui::End();
 }
 
