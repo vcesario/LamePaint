@@ -13,7 +13,7 @@
 
 void DrawMainMenu();
 void DrawBottomBar(int mouseX, int mouseY, float fps);
-void DrawToolsWindow();
+void DrawToolsWindow(TextureObject iconTex);
 
 const ImVec2 m_ToolsWindowSize(150, 250);
 const ImVec2 m_ToolsWindowPos(800 - m_ToolsWindowSize.x - 20, 100);
@@ -38,7 +38,7 @@ void TerminateUI()
 	ImGui::DestroyContext();
 }
 
-void DrawUI(int pixelX, int pixelY, float framerate)
+void DrawUI(int pixelX, int pixelY, float framerate, TextureObject iconTex)
 {
 	// imgui logic
 	ImGui_ImplOpenGL3_NewFrame();
@@ -48,7 +48,7 @@ void DrawUI(int pixelX, int pixelY, float framerate)
 	DrawMainMenu();
 	DrawBottomBar(pixelX, pixelY, framerate);
 
-	DrawToolsWindow();
+	DrawToolsWindow(iconTex);
 
 	// imgui render
 	ImGui::Render();
@@ -114,7 +114,7 @@ void DrawBottomBar(int posX, int posY, float fps)
 	}
 }
 
-void DrawToolsWindow()
+void DrawToolsWindow(TextureObject iconTex)
 {
 	ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize;
 
@@ -122,6 +122,12 @@ void DrawToolsWindow()
 
 	ImGui::SetWindowSize(m_ToolsWindowSize, ImGuiCond_Once);
 	ImGui::SetWindowPos(m_ToolsWindowPos, ImGuiCond_Once);
+
+	ImVec2 uv_min = ImVec2(0.0f, 0.0f);                 // Top-left
+	ImVec2 uv_max = ImVec2(1.0f, 1.0f);                 // Lower-right
+	ImVec4 tint_col = ImVec4(1.0f, 1.0f, 1.0f, 1.0f); // No tint
+	ImVec4 border_col = ImGui::GetStyleColorVec4(ImGuiCol_Border);
+	ImGui::Image((void*)(intptr_t)iconTex.id, ImVec2(iconTex.width, iconTex.height), uv_min, uv_max, tint_col, border_col);
 
 	ImVec2 wideButtonSize(ImGui::GetContentRegionAvail().x, ImGui::GetFrameHeight());
 
