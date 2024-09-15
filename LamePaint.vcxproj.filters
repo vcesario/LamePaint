@@ -8,6 +8,9 @@
     <Filter Include="imgui">
       <UniqueIdentifier>{6bba4358-649b-4be8-b158-05e095b9afba}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\shaders">
+      <UniqueIdentifier>{32b3d5ea-eb3d-478b-8527-7aa09dc15e3f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="app.cpp">
@@ -81,8 +84,20 @@
     <ClInclude Include="stb_image.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="globals.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
+    <ClInclude Include="shader_s.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="canvas.frag">
+      <Filter>Source Files\shaders</Filter>
+    </None>
+    <None Include="canvas.vert">
+      <Filter>Source Files\shaders</Filter>
+    </None>
+    <None Include="cursor.frag">
+      <Filter>Source Files\shaders</Filter>
+    </None>
+    <None Include="cursor.vert">
+      <Filter>Source Files\shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -73,12 +73,9 @@ int main()
 	IM_ASSERT(ret);
 	TextureObject iconTex(texId, texWidth, texHeight);
 
+	// *** setup canvas texture
 	SetupCanvas(STARTING_WINDOW_W, STARTING_WINDOW_H);
 
-	Shader shader("sh.vert", "sh.frag");
-	shader.use();
-
-	// setup canvas texture and FBO
 	unsigned int texture;
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);
@@ -115,8 +112,13 @@ int main()
 	//glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
 	//glDrawBuffer(GL_COLOR_ATTACHMENT0);
 	//GLuint clearColor[4] = { 0, 0, 0, 0 };
+	
+	// ***
+	
+	// *** setup canvas quad
+	Shader canvasShader("canvas.vert", "canvas.frag");
+	canvasShader.use();
 
-	// setup screen quad
 	float framePercent = (float)FrameHeight() / (float)STARTING_WINDOW_H;
 	float canvasEdgeAnchor = (1 - framePercent) * 2 - 1;
 	float vertices[] = {
@@ -157,6 +159,42 @@ int main()
 	// tex coord attribute
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
+	// ***
+
+	// *** setup cursor quad
+	Shader cursorShader("cursor.vert", "cursor.frag");
+	cursorShader.use();
+
+	float cursorVerts[] = {
+		-0.7f,  0.7, 0.0f, 0.0f, 0.0f, // top left
+		 0.7f,  0.7, 0.0f, 1.0f, 0.0f, // top right
+		 0.7f, -0.7, 0.0f, 1.0f, 1.0f, // bottom right
+		-0.7f, -0.7, 0.0f, 0.0f, 1.0f, // bottom left
+	};
+	int cursorIndices[] = {
+		0, 1, 2,
+		2, 3, 0,
+	};
+
+	unsigned int VAO2, VBO2, EBO2;
+	glGenVertexArrays(1, &VAO2);
+	glGenBuffers(1, &VBO2);
+	glGenBuffers(1, &EBO2);
+
+	glBindVertexArray(VAO2);
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBO2);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(cursorVerts), cursorVerts, GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO2);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(cursorIndices), cursorIndices, GL_STATIC_DRAW);
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
+	// ***
 
 	glViewport(0, 0, STARTING_WINDOW_W, STARTING_WINDOW_H);
 	glClearColor(0.3f, 0.7f, 0.1f, 1.0f);
@@ -186,7 +224,13 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT);
 		//glBindTexture(GL_TEXTURE_2D, texture);
 		//shader.use();
+		canvasShader.use();
 		glBindVertexArray(VAO);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+		// draw cursor
+		cursorShader.use();
+		glBindVertexArray(VAO2);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 		DrawUI(pixelCoord.x, pixelCoord.y, io.Framerate, iconTex);

@@ -170,7 +170,6 @@ void DrawToolsWindow(TextureObject iconTex)
 		ImVec4 color01 = ImVec4(colorPair.second.x / 255.0f, colorPair.second.y / 255.0f, colorPair.second.z / 255.0f, 1.0f);
 		ImGui::PushStyleColor(ImGuiCol_Button, color01);
 		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, color01);
-
 		ImGui::PushID(count);
 		if (ImGui::Button("", colorButtonSize))
 		{

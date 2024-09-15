@@ -47,6 +47,13 @@ To do:
     - [x] Functioning colors
     - [x] Menu icons
     - [] Cursor customization
+        - [] quad that follows mouse position
+        - [] quad texture
+        - [] quad texture changes size/color based on brush
+        - [] frag shader that draws circle on quad
+        - [] paint bucket icon
+        - [] hide mouse when on canvas, show when on UI or outside of window
+
     - [] Functioning bucket (maybe flood fill algo?)
 
 - [] Exit menu option
