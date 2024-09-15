@@ -45,7 +45,7 @@ To do:
         - [x] X key is a shortcut to swap between both
     - [x] Functioning brush size
     - [x] Functioning colors
-    - [] Menu icons
+    - [x] Menu icons
     - [] Cursor customization
     - [] Functioning bucket (maybe flood fill algo?)
 

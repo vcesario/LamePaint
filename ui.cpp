@@ -123,30 +123,35 @@ void DrawToolsWindow(TextureObject iconTex)
 	ImGui::SetWindowSize(m_ToolsWindowSize, ImGuiCond_Once);
 	ImGui::SetWindowPos(m_ToolsWindowPos, ImGuiCond_Once);
 
-	ImVec2 uv_min = ImVec2(0.0f, 0.0f);                 // Top-left
-	ImVec2 uv_max = ImVec2(1.0f, 1.0f);                 // Lower-right
-	ImVec4 tint_col = ImVec4(1.0f, 1.0f, 1.0f, 1.0f); // No tint
-	ImVec4 border_col = ImGui::GetStyleColorVec4(ImGuiCol_Border);
-	ImGui::Image((void*)(intptr_t)iconTex.id, ImVec2(iconTex.width, iconTex.height), uv_min, uv_max, tint_col, border_col);
+	ImVec2 imgSize = ImVec2(24.5f, 24.5f);
+	float imgPadding = (ImGui::GetContentRegionAvail().x - imgSize.x) / 2;
+	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(imgPadding, 0));
 
-	ImVec2 wideButtonSize(ImGui::GetContentRegionAvail().x, ImGui::GetFrameHeight());
-
-	if (ImGui::Button("Round brush", wideButtonSize))                            // Buttons return true when clicked (most widgets return true when edited/activated)
+	ImVec2 uvMin = ImVec2(imgSize.x * 1 / 98.0f, imgSize.y * 3 / 98.0f);
+	ImVec2 uvMax = ImVec2(imgSize.x * 2 / 98.0f, imgSize.y * 4 / 98.0f);
+	if (ImGui::ImageButton("##RoundBrush", (void*)(intptr_t)iconTex.id, imgSize, uvMin, uvMax))
 	{
 		//std::cout << "round brush selected" << std::endl;
 		SetModeToDefault();
 		SetUIBrushSlider(GetBrushSize());
 	}
-	if (ImGui::Button("Eraser", wideButtonSize))
+
+	uvMin = ImVec2(imgSize.x * 0 / 98.0f, imgSize.y * 1 / 98.0f);
+	uvMax = ImVec2(imgSize.x * 1 / 98.0f, imgSize.y * 2 / 98.0f);
+	if (ImGui::ImageButton("##Eraser", (void*)(intptr_t)iconTex.id, imgSize, uvMin, uvMax))
 	{
 		//std::cout << "Eraser selected" << std::endl;
 		SetModeToEraser();
 		SetUIBrushSlider(GetBrushSize());
 	}
-	if (ImGui::Button("Paint bucket", wideButtonSize))
+
+	uvMin = ImVec2(imgSize.x * 1 / 98.0f, imgSize.y * 1 / 98.0f);
+	uvMax = ImVec2(imgSize.x * 2 / 98.0f, imgSize.y * 2 / 98.0f);
+	if (ImGui::ImageButton("##PaintBucket", (void*)(intptr_t)iconTex.id, imgSize, uvMin, uvMax))
 	{
 		std::cout << "paint bucket selected" << std::endl;
 	}
+	ImGui::PopStyleVar();
 
 	char sliderLabel[] = "px\0";
 	float sliderWidth = ImGui::GetContentRegionAvail().x - ImGui::CalcTextSize(sliderLabel).x;
@@ -157,73 +162,28 @@ void DrawToolsWindow(TextureObject iconTex)
 	}
 
 	float buttonWidth = ImGui::GetContentRegionAvail().x / 2.0f - ImGui::GetStyle().FramePadding.x;
-	ImVec2 colorButtonSize(buttonWidth, 24);
+	ImVec2 colorButtonSize(buttonWidth, 20);
 
-	vec3byte nextColor = m_ColorIdToVal[Colors::Black];
-	ImVec4 nextColor01 = ImVec4(nextColor.x / 255.0f, nextColor.y / 255.0f, nextColor.z / 255.0f, 1.0f);
-	ImGui::PushStyleColor(ImGuiCol_Button, nextColor01);
-	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, nextColor01);
-	if (ImGui::Button("1", colorButtonSize))
+	int count = 0;
+	for (auto const& colorPair : m_ColorIdToVal)
 	{
-		SetBrushColor(Colors::Black);
+		ImVec4 color01 = ImVec4(colorPair.second.x / 255.0f, colorPair.second.y / 255.0f, colorPair.second.z / 255.0f, 1.0f);
+		ImGui::PushStyleColor(ImGuiCol_Button, color01);
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, color01);
+
+		ImGui::PushID(count);
+		if (ImGui::Button("", colorButtonSize))
+		{
+			SetBrushColor(colorPair.first);
+		}
+		ImGui::PopID();
+		ImGui::PopStyleColor(2);
+		
+		if (++count % 2 == 1)
+		{
+			ImGui::SameLine();
+		}
 	}
-	ImGui::PopStyleColor(2);
-
-	ImGui::SameLine();
-
-	nextColor = m_ColorIdToVal[Colors::White];
-	nextColor01 = ImVec4(nextColor.x / 255.0f, nextColor.y / 255.0f, nextColor.z / 255.0f, 1.0f);
-	ImGui::PushStyleColor(ImGuiCol_Button, nextColor01);
-	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, nextColor01);
-	if (ImGui::Button("2", colorButtonSize))
-	{
-		SetBrushColor(Colors::White);
-	}
-	ImGui::PopStyleColor(2);
-
-	nextColor = m_ColorIdToVal[Colors::Red];
-	nextColor01 = ImVec4(nextColor.x / 255.0f, nextColor.y / 255.0f, nextColor.z / 255.0f, 1.0f);
-	ImGui::PushStyleColor(ImGuiCol_Button, nextColor01);
-	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, nextColor01);
-	if (ImGui::Button("3", colorButtonSize))
-	{
-		SetBrushColor(Colors::Red);
-	}
-	ImGui::PopStyleColor(2);
-
-	ImGui::SameLine();
-
-	nextColor = m_ColorIdToVal[Colors::Green];
-	nextColor01 = ImVec4(nextColor.x / 255.0f, nextColor.y / 255.0f, nextColor.z / 255.0f, 1.0f);
-	ImGui::PushStyleColor(ImGuiCol_Button, nextColor01);
-	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, nextColor01);
-	if (ImGui::Button("4", colorButtonSize))
-	{
-		SetBrushColor(Colors::Green);
-	}
-	ImGui::PopStyleColor(2);
-
-	nextColor = m_ColorIdToVal[Colors::Blue];
-	nextColor01 = ImVec4(nextColor.x / 255.0f, nextColor.y / 255.0f, nextColor.z / 255.0f, 1.0f);
-	ImGui::PushStyleColor(ImGuiCol_Button, nextColor01);
-	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, nextColor01);
-	if (ImGui::Button("5", colorButtonSize))
-	{
-		SetBrushColor(Colors::Blue);
-	}
-	ImGui::PopStyleColor(2);
-
-	ImGui::SameLine();
-
-	nextColor = m_ColorIdToVal[Colors::Yellow];
-	nextColor01 = ImVec4(nextColor.x / 255.0f, nextColor.y / 255.0f, nextColor.z / 255.0f, 1.0f);
-	ImGui::PushStyleColor(ImGuiCol_Button, nextColor01);
-	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, nextColor01);
-	if (ImGui::Button("6", colorButtonSize))
-	{
-		SetBrushColor(Colors::Yellow);
-	}
-	ImGui::PopStyleColor(2);
 
 	ImGui::End();
 }
