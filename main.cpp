@@ -62,6 +62,9 @@ int main()
 		return -1;
 	}
 
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	InitUI(window);
 	ImGuiIO& io = ImGui::GetIO(); // wanted to do this inside InitUI() but I don't know how to properly make it global
 
@@ -164,12 +167,13 @@ int main()
 	// *** setup cursor quad
 	Shader cursorShader("cursor.vert", "cursor.frag");
 	cursorShader.use();
+	cursorShader.setVec2("windowSize", STARTING_WINDOW_W, STARTING_WINDOW_H);
 
 	float cursorVerts[] = {
-		-0.7f,  0.7, 0.0f, 0.0f, 0.0f, // top left
-		 0.7f,  0.7, 0.0f, 1.0f, 0.0f, // top right
-		 0.7f, -0.7, 0.0f, 1.0f, 1.0f, // bottom right
-		-0.7f, -0.7, 0.0f, 0.0f, 1.0f, // bottom left
+		-1.0f,  1.0, 0.0f, 0.0f, 0.0f, // top left
+		 1.0f,  1.0, 0.0f, 1.0f, 0.0f, // top right
+		 1.0f, -1.0, 0.0f, 1.0f, 1.0f, // bottom right
+		-1.0f, -1.0, 0.0f, 0.0f, 1.0f, // bottom left
 	};
 	int cursorIndices[] = {
 		0, 1, 2,
@@ -230,6 +234,9 @@ int main()
 
 		// draw cursor
 		cursorShader.use();
+		cursorShader.setVec2("cursorPos", CursorX, CursorY);
+		cursorShader.setFloat("brushSize", GetBrushSize());
+		cursorShader.setVec3("brushColor", GetBrushColor().x, GetBrushColor().y, GetBrushColor().z);
 		glBindVertexArray(VAO2);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 

@@ -84,7 +84,12 @@
     <ClInclude Include="stb_image.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="shader_s.h" />
+    <ClInclude Include="globals.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="shader_s.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="canvas.frag">

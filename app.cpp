@@ -311,6 +311,17 @@ void SetBrushColor(Colors newColor)
 		m_EraserColor = m_ColorIdToVal[newColor];
 	}
 }
+vec3byte GetBrushColor()
+{
+	if (m_CurrentMode == BrushModes::DEFAULT)
+	{
+		return m_BrushColor;
+	}
+	else // mode == eraser
+	{
+		return m_EraserColor;
+	}
+}
 
 void SetModeToDefault()
 {

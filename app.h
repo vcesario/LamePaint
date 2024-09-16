@@ -70,6 +70,7 @@ void SetupCanvas(int windowWidth, int windowHeight);
 void PaintAtPixelCoord(double cursorX, double cursorY);
 void PaintRectangle(double cursorX_LastFrame, double cursorY_LastFrame, double cursorX, double cursorY);
 void SetBrushColor(Colors newColor);
+vec3byte GetBrushColor();
 void SetModeToDefault();
 void SetModeToEraser();
 void SwapBrushMode();
