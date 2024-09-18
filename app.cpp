@@ -34,6 +34,7 @@ enum class BrushModes
 {
 	DEFAULT,
 	ERASER,
+	BUCKET,
 };
 
 vec3byte m_BrushColor = COLOR_BLACK;
@@ -72,6 +73,11 @@ void SetupCanvas(int windowWidth, int windowHeight)
 
 void PaintAtPixelCoord(double cursorX, double cursorY)
 {
+	if (m_CurrentMode == BrushModes::BUCKET)
+	{
+		return;
+	}
+
 	int brushSize = m_CurrentMode == BrushModes::DEFAULT ? m_BrushSize : m_EraserSize;
 
 	if (cursorX < 0 || cursorX >= CanvasWidth
@@ -204,6 +210,11 @@ double Clamp(double value, double min, double max)
 }
 void PaintRectangle(double cursorX_LastFrame, double cursorY_LastFrame, double cursorX, double cursorY)
 {
+	if (m_CurrentMode == BrushModes::BUCKET)
+	{
+		return;
+	}
+
 	int brushSize = m_CurrentMode == BrushModes::DEFAULT ? m_BrushSize : m_EraserSize;
 
 	if (cursorX < 0 || cursorX >= CanvasWidth
@@ -302,23 +313,25 @@ void PaintRectangle(double cursorX_LastFrame, double cursorY_LastFrame, double c
 
 void SetBrushColor(Colors newColor)
 {
-	if (m_CurrentMode == BrushModes::DEFAULT)
+	switch (m_CurrentMode)
 	{
+	case BrushModes::DEFAULT:
+	case BrushModes::BUCKET:
 		m_BrushColor = m_ColorIdToVal[newColor];
-	}
-	else // mode == eraser
-	{
+		break;
+	case BrushModes::ERASER:
 		m_EraserColor = m_ColorIdToVal[newColor];
+		break;
 	}
 }
 vec3byte GetBrushColor()
 {
-	if (m_CurrentMode == BrushModes::DEFAULT)
+	switch (m_CurrentMode)
 	{
+	case BrushModes::DEFAULT:
+	case BrushModes::BUCKET:
 		return m_BrushColor;
-	}
-	else // mode == eraser
-	{
+	case BrushModes::ERASER:
 		return m_EraserColor;
 	}
 }
@@ -335,29 +348,43 @@ void SetModeToEraser()
 
 void SwapBrushMode()
 {
-	if (m_CurrentMode == BrushModes::DEFAULT)
+	switch (m_CurrentMode)
 	{
+	case BrushModes::DEFAULT:
 		m_CurrentMode = BrushModes::ERASER;
-	}
-	else // mode == eraser
-	{
+		break;
+	case BrushModes::ERASER:
 		m_CurrentMode = BrushModes::DEFAULT;
+		break;
+	default:
+		break;
 	}
 }
 
 void SetBrushSize(int size)
 {
-	if (m_CurrentMode == BrushModes::DEFAULT)
+	switch (m_CurrentMode)
 	{
+	case BrushModes::DEFAULT:
 		m_BrushSize = size;
-	}
-	else // mode == eraser
-	{
+		break;
+	case BrushModes::ERASER:
 		m_EraserSize = size;
+		break;
+	default:
+		break;
 	}
 }
 
 int GetBrushSize()
 {
-	return m_CurrentMode == BrushModes::DEFAULT ? m_BrushSize : m_EraserSize;
+	switch (m_CurrentMode)
+	{
+	case BrushModes::DEFAULT:
+		return m_BrushSize;
+	case BrushModes::ERASER:
+		return m_EraserSize;
+	default:
+		return 0;
+	}
 }

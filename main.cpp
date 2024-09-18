@@ -168,6 +168,14 @@ int main()
 	Shader cursorShader("cursor.vert", "cursor.frag");
 	cursorShader.use();
 	cursorShader.setVec2("windowSize", STARTING_WINDOW_W, STARTING_WINDOW_H);
+	
+	Shader bucketCursorShader("bucketCursor.vert", "bucketCursor.frag");
+	bucketCursorShader.use();
+	bucketCursorShader.setVec2("windowSize", STARTING_WINDOW_W, STARTING_WINDOW_H);
+
+	// colocar vertices do tamanho exato do icone
+	// calcular uv pra pegar o pedaço exato da textura
+	// deslocar vertices pra casar exatamente a ponta do cursor com a ponta do balde
 
 	float cursorVerts[] = {
 		-1.0f,  1.0, 0.0f, 0.0f, 0.0f, // top left
@@ -205,6 +213,8 @@ int main()
 
 	while (!glfwWindowShouldClose(window))
 	{
+		glBindTexture(GL_TEXTURE_2D, texture); // canvas texture
+
 		// app logic
 		vec2 pixelCoord = GetCursorPos_Pixel(CursorX, CursorY);
 		if (IsClicking)
@@ -226,17 +236,21 @@ int main()
 
 		// app render
 		glClear(GL_COLOR_BUFFER_BIT);
-		//glBindTexture(GL_TEXTURE_2D, texture);
 		//shader.use();
 		canvasShader.use();
 		glBindVertexArray(VAO);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 		// draw cursor
-		cursorShader.use();
-		cursorShader.setVec2("cursorPos", CursorX, CursorY);
-		cursorShader.setFloat("brushSize", GetBrushSize());
-		cursorShader.setVec3("brushColor", GetBrushColor().x, GetBrushColor().y, GetBrushColor().z);
+		//cursorShader.use();
+		//cursorShader.setVec2("cursorPos", CursorX, CursorY);
+		//cursorShader.setFloat("brushSize", GetBrushSize());
+		//cursorShader.setVec3("brushColor", GetBrushColor().x, GetBrushColor().y, GetBrushColor().z);
+
+		glBindTexture(GL_TEXTURE_2D, iconTex.id); // bucket texture
+		bucketCursorShader.use();
+		bucketCursorShader.setVec2("cursorPos", CursorX, CursorY);
+
 		glBindVertexArray(VAO2);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 

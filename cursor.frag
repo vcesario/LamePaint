@@ -8,9 +8,9 @@ out vec4 FragColor;
 
 void main()
 {
-	vec2 dxdy = uvCoord - 0.5f;
-	float d = pow(dxdy.x, 2.0f) + pow(dxdy.y, 2.0f);
-	float inCircle = 1.0f - step(0.25f, d);
+	vec2 dxdy = uvCoord - 0.5;
+	float d = pow(dxdy.x, 2.0) + pow(dxdy.y, 2.0);
+	float inCircle = 1.0 - step(0.25, d);
 
-	FragColor = vec4(brushColor / 255.0f, 0.9f) * inCircle;
+	FragColor = vec4(brushColor / 255.0, 0.9) * inCircle;
 }

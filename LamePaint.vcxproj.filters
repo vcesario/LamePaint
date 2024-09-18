@@ -104,5 +104,11 @@
     <None Include="cursor.vert">
       <Filter>Source Files\shaders</Filter>
     </None>
+    <None Include="bucketCursor.vert">
+      <Filter>Source Files\shaders</Filter>
+    </None>
+    <None Include="bucketCursor.frag">
+      <Filter>Source Files\shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>
