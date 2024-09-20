@@ -64,7 +64,7 @@ void SetupCanvas(int windowWidth, int windowHeight)
 	data = std::vector<GLubyte>(CanvasWidth * CanvasHeight * 4, 255);
 }
 
-void PaintAtPixelCoord(double cursorX, double cursorY)
+void PaintCircle(double cursorX, double cursorY)
 {
 	if (m_CurrentMode == BrushModes::BUCKET)
 	{
@@ -302,6 +302,11 @@ void PaintRectangle(double cursorX_LastFrame, double cursorY_LastFrame, double c
 			}
 		}
 	}
+}
+
+void PaintFill(double cursorX, double cursorY)
+{
+	std::cout << "paint at (" << cursorX << ", " << cursorY << ")" << std::endl;
 }
 
 void SetBrushColor(Colors newColor)

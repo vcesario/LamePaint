@@ -219,20 +219,34 @@ int main()
 
 		// app logic
 		vec2 pixelCoord = GetCursorPos_Pixel(CursorX, CursorY);
-		if (IsClicking)
+		if (GetBrushMode() == BrushModes::BUCKET)
 		{
-			if (IsDragging)
+			if (IsClicking)
 			{
-				PaintRectangle(CursorX_LastFrame, CursorY_LastFrame, CursorX, CursorY);
-				PaintAtPixelCoord(CursorX, CursorY);
-				glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, CanvasWidth, CanvasHeight, GL_RGBA, GL_UNSIGNED_BYTE, &data[0]);
+				if (!ClickDownConsumed)
+				{
+					PaintFill(CursorX, CursorY);
+					ClickDownConsumed = true;
+				}
 			}
-			else if (!ClickDownConsumed)
+		}
+		else
+		{
+			if (IsClicking)
 			{
-				PaintAtPixelCoord(CursorX, CursorY);
-				glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, CanvasWidth, CanvasHeight, GL_RGBA, GL_UNSIGNED_BYTE, &data[0]);
+				if (IsDragging)
+				{
+					PaintRectangle(CursorX_LastFrame, CursorY_LastFrame, CursorX, CursorY);
+					PaintCircle(CursorX, CursorY);
+					glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, CanvasWidth, CanvasHeight, GL_RGBA, GL_UNSIGNED_BYTE, &data[0]);
+				}
+				else if (!ClickDownConsumed)
+				{
+					PaintCircle(CursorX, CursorY);
+					glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, CanvasWidth, CanvasHeight, GL_RGBA, GL_UNSIGNED_BYTE, &data[0]);
 
-				ClickDownConsumed = true;
+					ClickDownConsumed = true;
+				}
 			}
 		}
 
