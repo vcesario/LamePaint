@@ -46,12 +46,12 @@ To do:
     - [x] Functioning brush size
     - [x] Functioning colors
     - [x] Menu icons
-    - [] Cursor customization
+    - [x] Cursor customization
         - [x] quad that follows mouse position
         - [x] quad changes size/color based on brush
         - [x] frag shader that draws circle on quad
         - [x] paint bucket icon
-        - [] hide mouse when on canvas, show when on UI or outside of window
+        - [x] hide mouse when on canvas, show when on UI or outside of window
 
     - [] Functioning bucket (maybe flood fill algo?)
 
@@ -70,6 +70,7 @@ To do:
     - [] Pixel coordinates shouldn't update while hovering top and bottom bars
     - [] If I drag out of screen too fast, it discards the rectangle
     - [] Tools menu should block drawing
+    - [] CURSOR_HIDDEN doesn't really work
 
 If I feel like it:
 - Fix bug where sometimes rectangles arent rasterized. Maybe a tool that draws in slowmo as it logs current steps on console....

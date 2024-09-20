@@ -31,6 +31,8 @@ void OnKeyChanged_Callback(GLFWwindow* window, int key, int scancode, int action
 bool LoadTextureFromMemory(const void* data, size_t data_size, GLuint* out_texture, int* out_width, int* out_height);
 bool LoadTextureFromFile(const char* file_name, GLuint* out_texture, int* out_width, int* out_height);
 
+void HandleCursorVisibility(GLFWwindow* window);
+
 int main()
 {
 	glfwInit();
@@ -261,6 +263,8 @@ int main()
 
 		DrawUI(pixelCoord.x, pixelCoord.y, io.Framerate, iconTex);
 
+		HandleCursorVisibility(window);
+
 		glfwSwapBuffers(window);
 
 		glfwPollEvents();
@@ -385,4 +389,27 @@ bool LoadTextureFromFile(const char* file_name, GLuint* out_texture, int* out_wi
 	bool ret = LoadTextureFromMemory(file_data, file_size, out_texture, out_width, out_height);
 	IM_FREE(file_data);
 	return ret;
+}
+
+bool m_CursorOnUi;
+void HandleCursorVisibility(GLFWwindow* window)
+{
+	if (m_CursorOnUi)
+	{
+		if (!IsCursorHoveringUI())
+		{
+			m_CursorOnUi = false;
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN); // disable cursor (not working for some reason??)
+			//std::cout << "cursor hidden." << std::endl;
+		}
+	}
+	else
+	{
+		if (IsCursorHoveringUI())
+		{
+			m_CursorOnUi = true;
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+			//std::cout << "cursor visible!" << std::endl;
+		}
+	}
 }

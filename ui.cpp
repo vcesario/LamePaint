@@ -193,3 +193,8 @@ void SetUIBrushSlider(int value)
 {
 	m_BrushSize = value;
 }
+
+bool IsCursorHoveringUI()
+{
+	return ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow | ImGuiHoveredFlags_AllowWhenBlockedByPopup | ImGuiHoveredFlags_AllowWhenBlockedByActiveItem);
+}
