@@ -1,6 +1,7 @@
 #include <vector>
 #include <glad/glad.h>
 #include <map>
+#include "globals.h"
 
 struct vec2
 {
@@ -73,6 +74,8 @@ void SetBrushColor(Colors newColor);
 vec3byte GetBrushColor();
 void SetModeToDefault();
 void SetModeToEraser();
+void SetModeToBucket();
 void SwapBrushMode();
+BrushModes GetBrushMode();
 void SetBrushSize(int size);
 int GetBrushSize();

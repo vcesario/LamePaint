@@ -14,3 +14,10 @@ struct TextureObject
 		this->height = height;
 	}
 };
+
+enum class BrushModes
+{
+	DEFAULT,
+	ERASER,
+	BUCKET,
+};

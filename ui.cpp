@@ -149,7 +149,9 @@ void DrawToolsWindow(TextureObject iconTex)
 	uvMax = ImVec2(imgSize.x * 2 / 98.0f, imgSize.y * 2 / 98.0f);
 	if (ImGui::ImageButton("##PaintBucket", (void*)(intptr_t)iconTex.id, imgSize, uvMin, uvMax))
 	{
-		std::cout << "paint bucket selected" << std::endl;
+		//std::cout << "paint bucket selected" << std::endl;
+		SetModeToBucket();
+		SetUIBrushSlider(GetBrushSize());
 	}
 	ImGui::PopStyleVar();
 

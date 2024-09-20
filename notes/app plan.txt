@@ -50,7 +50,7 @@ To do:
         - [x] quad that follows mouse position
         - [x] quad changes size/color based on brush
         - [x] frag shader that draws circle on quad
-        - [] paint bucket icon
+        - [x] paint bucket icon
         - [] hide mouse when on canvas, show when on UI or outside of window
 
     - [] Functioning bucket (maybe flood fill algo?)

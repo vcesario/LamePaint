@@ -115,9 +115,9 @@ int main()
 	//glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
 	//glDrawBuffer(GL_COLOR_ATTACHMENT0);
 	//GLuint clearColor[4] = { 0, 0, 0, 0 };
-	
+
 	// ***
-	
+
 	// *** setup canvas quad
 	Shader canvasShader("canvas.vert", "canvas.frag");
 	canvasShader.use();
@@ -168,7 +168,7 @@ int main()
 	Shader cursorShader("cursor.vert", "cursor.frag");
 	cursorShader.use();
 	cursorShader.setVec2("windowSize", STARTING_WINDOW_W, STARTING_WINDOW_H);
-	
+
 	Shader bucketCursorShader("bucketCursor.vert", "bucketCursor.frag");
 	bucketCursorShader.use();
 	bucketCursorShader.setVec2("windowSize", STARTING_WINDOW_W, STARTING_WINDOW_H);
@@ -236,20 +236,25 @@ int main()
 
 		// app render
 		glClear(GL_COLOR_BUFFER_BIT);
-		//shader.use();
 		canvasShader.use();
+
 		glBindVertexArray(VAO);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 		// draw cursor
-		//cursorShader.use();
-		//cursorShader.setVec2("cursorPos", CursorX, CursorY);
-		//cursorShader.setFloat("brushSize", GetBrushSize());
-		//cursorShader.setVec3("brushColor", GetBrushColor().x, GetBrushColor().y, GetBrushColor().z);
-
-		glBindTexture(GL_TEXTURE_2D, iconTex.id); // bucket texture
-		bucketCursorShader.use();
-		bucketCursorShader.setVec2("cursorPos", CursorX, CursorY);
+		if (GetBrushMode() == BrushModes::BUCKET)
+		{
+			glBindTexture(GL_TEXTURE_2D, iconTex.id); // bucket texture
+			bucketCursorShader.use();
+			bucketCursorShader.setVec2("cursorPos", CursorX, CursorY);
+		}
+		else
+		{
+			cursorShader.use();
+			cursorShader.setVec2("cursorPos", CursorX, CursorY);
+			cursorShader.setFloat("brushSize", GetBrushSize());
+			cursorShader.setVec3("brushColor", GetBrushColor().x, GetBrushColor().y, GetBrushColor().z);
+		}
 
 		glBindVertexArray(VAO2);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
@@ -301,11 +306,16 @@ void OnKeyChanged_Callback(GLFWwindow* window, int key, int scancode, int action
 {
 	//std::cout << key << ", " << scancode << ", " << action << ", " << mods << std::endl;
 
-	if (action == 1)
+	if (action == 1) // if button down
 	{
 		switch (key)
 		{
 		case 88: // X
+			if (GetBrushMode() == BrushModes::BUCKET)
+			{
+				return;
+			}
+
 			SwapBrushMode();
 			SetUIBrushSlider(GetBrushSize());
 			break;

@@ -30,13 +30,6 @@ std::map<Colors, vec3byte> m_ColorIdToVal = {
 	{Colors::Yellow, COLOR_YELLOW},
 };
 
-enum class BrushModes
-{
-	DEFAULT,
-	ERASER,
-	BUCKET,
-};
-
 vec3byte m_BrushColor = COLOR_BLACK;
 vec3byte m_EraserColor = COLOR_WHITE;
 
@@ -346,6 +339,11 @@ void SetModeToEraser()
 	m_CurrentMode = BrushModes::ERASER;
 }
 
+void SetModeToBucket()
+{
+	m_CurrentMode = BrushModes::BUCKET;
+}
+
 void SwapBrushMode()
 {
 	switch (m_CurrentMode)
@@ -359,6 +357,11 @@ void SwapBrushMode()
 	default:
 		break;
 	}
+}
+
+BrushModes GetBrushMode()
+{
+	return m_CurrentMode;
 }
 
 void SetBrushSize(int size)
