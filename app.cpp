@@ -5,6 +5,11 @@
 #include <vector>
 #include <iostream>
 #include <iomanip>
+#include <queue>
+#include <unordered_set>
+
+#define VecToIndex(Vec) Vec.y * CanvasWidth * 4 + Vec.x * 4
+#define CoordToIndex(X, Y) Y * CanvasWidth * 4 + X * 4
 
 int m_WindowWidth;
 int m_WindowHeight;
@@ -38,19 +43,34 @@ int m_EraserSize = 3;
 
 BrushModes m_CurrentMode = BrushModes::DEFAULT;
 
-bool IsPointWithinCircle(int pointX, int pointY, int centerX, int centerY, int r);
+bool IsPointWithinCircle(int pointX, int pointY, int centerX, int centerY, int r)
+{
+	int dx = pointX - centerX;
+	int dy = pointY - centerY;
+	int d = dx * dx + dy * dy;
+	return d <= r * r;
+}
+
+bool IsCursorWithinCanvas(double cursorX, double cursorY)
+{
+	if (cursorX < 0 || cursorX >= CanvasWidth || cursorY < FrameHeight() || cursorY >= (m_WindowHeight - FrameHeight()))
+	{
+		return false;
+	}
+
+	return true;
+}
 
 int FrameHeight()
 {
 	return 19;
 }
 
-vec2 GetCursorPos_Pixel(double cursorX, double cursorY)
+vec2int CursorToCanvas(double cursorX, double cursorY)
 {
-	//return vec2(m_CursorX, m_CursorY);
 	int pixelX = cursorX;
 	int pixelY = cursorY - FrameHeight();
-	return vec2(pixelX, pixelY);
+	return vec2int(pixelX, pixelY);
 }
 
 void SetupCanvas(int windowWidth, int windowHeight)
@@ -71,16 +91,16 @@ void PaintCircle(double cursorX, double cursorY)
 		return;
 	}
 
-	int brushSize = m_CurrentMode == BrushModes::DEFAULT ? m_BrushSize : m_EraserSize;
-
-	if (cursorX < 0 || cursorX >= CanvasWidth
-		|| cursorY < FrameHeight() || cursorY >= (m_WindowHeight - FrameHeight()))
+	if (!IsCursorWithinCanvas(cursorX, cursorY))
 	{
 		return;
 	}
 
-	int pixelX = cursorX;
-	int pixelY = cursorY - FrameHeight();
+	int brushSize = m_CurrentMode == BrushModes::DEFAULT ? m_BrushSize : m_EraserSize;
+
+	vec2int canvasCoord = CursorToCanvas(cursorX, cursorY);
+	int pixelX = canvasCoord.x;
+	int pixelY = canvasCoord.y;
 
 	unsigned int halfSize = brushSize / 2;
 	bool isPair = brushSize % 2 == 0;
@@ -114,29 +134,21 @@ void PaintCircle(double cursorX, double cursorY)
 			{
 				if (m_CurrentMode == BrushModes::DEFAULT)
 				{
-					data[j * CanvasWidth * 4 + i * 4] = m_BrushColor.x; // R
-					data[j * CanvasWidth * 4 + i * 4 + 1] = m_BrushColor.y; // G
-					data[j * CanvasWidth * 4 + i * 4 + 2] = m_BrushColor.z; // B
+					data[CoordToIndex(i, j)] = m_BrushColor.x; // R
+					data[CoordToIndex(i, j) + 1] = m_BrushColor.y; // G
+					data[CoordToIndex(i, j) + 2] = m_BrushColor.z; // B
 				}
 				else // mode = eraser
 				{
-					data[j * CanvasWidth * 4 + i * 4] = m_EraserColor.x; // R
-					data[j * CanvasWidth * 4 + i * 4 + 1] = m_EraserColor.y; // G
-					data[j * CanvasWidth * 4 + i * 4 + 2] = m_EraserColor.z; // B
+					data[CoordToIndex(i, j)] = m_EraserColor.x; // R
+					data[CoordToIndex(i, j) + 1] = m_EraserColor.y; // G
+					data[CoordToIndex(i, j) + 2] = m_EraserColor.z; // B
 				}
 
-				data[j * CanvasWidth * 4 + i * 4 + 3] = 255; // A
+				data[CoordToIndex(i, j) + 3] = 255; // A
 			}
 		}
 	}
-}
-
-bool IsPointWithinCircle(int pointX, int pointY, int centerX, int centerY, int r)
-{
-	int dx = pointX - centerX;
-	int dy = pointY - centerY;
-	int d = dx * dx + dy * dy;
-	return d <= r * r;
 }
 
 std::ostream& operator << (std::ostream& os, const vec3& s) {
@@ -208,21 +220,25 @@ void PaintRectangle(double cursorX_LastFrame, double cursorY_LastFrame, double c
 		return;
 	}
 
-	int brushSize = m_CurrentMode == BrushModes::DEFAULT ? m_BrushSize : m_EraserSize;
-
-	if (cursorX < 0 || cursorX >= CanvasWidth
-		|| cursorY < FrameHeight() || cursorY >= (m_WindowHeight - FrameHeight()))
+	if (!IsCursorWithinCanvas(cursorX, cursorY))
 	{
 		return;
 	}
 
+	int brushSize = m_CurrentMode == BrushModes::DEFAULT ? m_BrushSize : m_EraserSize;
+
+
 	//std::cout << std::fixed << std::setprecision(2) << "Drawing rectangle from (" << cursorX_LastFrame << ", " << cursorY_LastFrame << ") to ("
 	//	<< cursorX << ", " << cursorY << ")" << std::endl;
 
-	int pixelX_LastFrame = cursorX_LastFrame;
-	int pixelY_LastFrame = cursorY_LastFrame - FrameHeight();
-	int pixelX = cursorX;
-	int pixelY = cursorY - FrameHeight();
+
+	vec2int canvasCoord_LastFrame = CursorToCanvas(cursorX_LastFrame, cursorY_LastFrame);
+	int pixelX_LastFrame = canvasCoord_LastFrame.x;
+	int pixelY_LastFrame = canvasCoord_LastFrame.y;
+
+	vec2int canvasCoord = CursorToCanvas(cursorX, cursorY);
+	int pixelX = canvasCoord.x;
+	int pixelY = canvasCoord.y;
 
 	// find vector that is orthogonal to (C - Clf)
 	// normalize it and multiply by half brushSize
@@ -284,18 +300,18 @@ void PaintRectangle(double cursorX_LastFrame, double cursorY_LastFrame, double c
 							// is inside quad, so draw pixel
 							if (m_CurrentMode == BrushModes::DEFAULT)
 							{
-								data[j * CanvasWidth * 4 + i * 4] = m_BrushColor.x; // R
-								data[j * CanvasWidth * 4 + i * 4 + 1] = m_BrushColor.y; // G
-								data[j * CanvasWidth * 4 + i * 4 + 2] = m_BrushColor.z; // B
+								data[CoordToIndex(i, j)] = m_BrushColor.x; // R
+								data[CoordToIndex(i, j) + 1] = m_BrushColor.y; // G
+								data[CoordToIndex(i, j) + 2] = m_BrushColor.z; // B
 							}
 							else // mode = eraser
 							{
-								data[j * CanvasWidth * 4 + i * 4] = m_EraserColor.x; // R
-								data[j * CanvasWidth * 4 + i * 4 + 1] = m_EraserColor.y; // G
-								data[j * CanvasWidth * 4 + i * 4 + 2] = m_EraserColor.z; // B
+								data[CoordToIndex(i, j)] = m_EraserColor.x; // R
+								data[CoordToIndex(i, j) + 1] = m_EraserColor.y; // G
+								data[CoordToIndex(i, j) + 2] = m_EraserColor.z; // B
 							}
 
-							data[j * CanvasWidth * 4 + i * 4 + 3] = 255; // A
+							data[CoordToIndex(i, j) + 3] = 255; // A
 						}
 					}
 				}
@@ -304,9 +320,86 @@ void PaintRectangle(double cursorX_LastFrame, double cursorY_LastFrame, double c
 	}
 }
 
+bool IsSameColor(vec2int c1, vec2int c2)
+{
+	//std::cout << c1.x << ", " << c1.y << " x " << c2.x << ", " << c2.y << std::endl;
+	//std::cout << (int)data[VecToIndex(c1)] << " == " << (int)data[VecToIndex(c2)] << ": " << (data[VecToIndex(c1)] == data[VecToIndex(c2)]) << std::endl;
+	//std::cout << (int)data[VecToIndex(c1) + 1] << " == " << (int)data[VecToIndex(c2) + 1] << ": " << (data[VecToIndex(c1) + 1] == data[VecToIndex(c2) + 1]) << std::endl;
+	//std::cout << (int)data[VecToIndex(c1) + 2] << " == " << (int)data[VecToIndex(c2) + 2] << ": " << (data[VecToIndex(c1) + 2] == data[VecToIndex(c2) + 2]) << std::endl;
+
+	return data[VecToIndex(c1)] == data[VecToIndex(c2)] // is R the same?
+		&& data[VecToIndex(c1) + 1] == data[VecToIndex(c2) + 1] // is G the same?
+		&& data[VecToIndex(c1) + 2] == data[VecToIndex(c2) + 2]; // is B the same?
+}
 void PaintFill(double cursorX, double cursorY)
 {
-	std::cout << "paint at (" << cursorX << ", " << cursorY << ")" << std::endl;
+	if (m_CurrentMode != BrushModes::BUCKET)
+	{
+		return;
+	}
+
+	if (!IsCursorWithinCanvas(cursorX, cursorY))
+	{
+		return;
+	}
+
+	vec2int canvasCoord = CursorToCanvas(cursorX, cursorY);
+
+	// if pixel at point is exactly the same color, no need to go further
+	if (data[VecToIndex(canvasCoord)] == m_BrushColor.x
+		&& data[VecToIndex(canvasCoord) + 1] == m_BrushColor.y
+		&& data[VecToIndex(canvasCoord) + 2] == m_BrushColor.z)
+	{
+		std::cout << "pixel is already that color!" << std::endl;
+		return;
+	}
+
+	// flood fill algorithm
+	std::queue<vec2int> coords; // coords to be painted possibly
+	std::unordered_set<vec2int, vec2intHash> visited = { canvasCoord };
+	coords.push(canvasCoord);
+
+	while (coords.size() > 0)
+	{
+		// grabs coord at the top of the q
+		vec2int coord = coords.front();
+		coords.pop();
+
+		// adds cardinal neighbors to end of q if they're the same color as coord (and within canvas, and haven't been visited yet)
+		vec2int coordAbove(coord.x, coord.y - 1);
+		if (IsCursorWithinCanvas(coordAbove.x, coordAbove.y) && !visited.count(coordAbove) && IsSameColor(coord, coordAbove))
+		{
+			coords.push(coordAbove);
+			visited.insert(coordAbove);
+		}
+
+		vec2int coordLeft(coord.x - 1, coord.y);
+		if (IsCursorWithinCanvas(coordLeft.x, coordLeft.y) && !visited.count(coordLeft) && IsSameColor(coord, coordLeft))
+		{
+			coords.push(coordLeft);
+			visited.insert(coordLeft);
+		}
+
+		vec2int coordBelow(coord.x, coord.y + 1);
+		if (IsCursorWithinCanvas(coordBelow.x, coordBelow.y) && !visited.count(coordBelow) && IsSameColor(coord, coordBelow))
+		{
+			coords.push(coordBelow);
+			visited.insert(coordBelow);
+		}
+
+		vec2int coordRight(coord.x + 1, coord.y);
+		if (IsCursorWithinCanvas(coordRight.x, coordRight.y) && !visited.count(coordRight) && IsSameColor(coord, coordRight))
+		{
+			coords.push(coordRight);
+			visited.insert(coordRight);
+		}
+
+		// sets pixel at coord to brush color
+		//std::cout << "(" << coord.x << ", " << coord.y << ")" << std::endl;
+		data[VecToIndex(coord)] = m_BrushColor.x;
+		data[VecToIndex(coord) + 1] = m_BrushColor.y;
+		data[VecToIndex(coord) + 2] = m_BrushColor.z;
+	}
 }
 
 void SetBrushColor(Colors newColor)

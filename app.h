@@ -15,6 +15,30 @@ struct vec2
 	}
 };
 
+struct vec2int
+{
+	int x;
+	int y;
+
+	vec2int(int x, int y)
+	{
+		this->x = x;
+		this->y = y;
+	}
+
+	bool operator==(const vec2int& other) const
+	{
+		return x == other.x && y == other.y;
+	}
+};
+struct vec2intHash {
+public:
+	size_t operator()(const vec2int p) const
+	{
+		return std::hash<uint32_t>()(p.x) ^ std::hash<uint32_t>()(p.y);
+	}
+};
+
 struct vec3
 {
 	double x;
@@ -66,7 +90,7 @@ extern std::vector<GLubyte> data;
 extern std::map<Colors, vec3byte> m_ColorIdToVal;
 
 int FrameHeight();
-vec2 GetCursorPos_Pixel(double cursorX, double cursorY);
+vec2int CursorToCanvas(double cursorX, double cursorY);
 void SetupCanvas(int windowWidth, int windowHeight);
 void PaintCircle(double cursorX, double cursorY);
 void PaintRectangle(double cursorX_LastFrame, double cursorY_LastFrame, double cursorX, double cursorY);

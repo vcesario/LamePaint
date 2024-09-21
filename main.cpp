@@ -218,7 +218,7 @@ int main()
 		glBindTexture(GL_TEXTURE_2D, texture); // canvas texture
 
 		// app logic
-		vec2 pixelCoord = GetCursorPos_Pixel(CursorX, CursorY);
+		vec2int canvasCoord = CursorToCanvas(CursorX, CursorY);
 		if (GetBrushMode() == BrushModes::BUCKET)
 		{
 			if (IsClicking)
@@ -226,6 +226,8 @@ int main()
 				if (!ClickDownConsumed)
 				{
 					PaintFill(CursorX, CursorY);
+					glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, CanvasWidth, CanvasHeight, GL_RGBA, GL_UNSIGNED_BYTE, &data[0]);
+
 					ClickDownConsumed = true;
 				}
 			}
@@ -275,7 +277,7 @@ int main()
 		glBindVertexArray(VAO2);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-		DrawUI(pixelCoord.x, pixelCoord.y, io.Framerate, iconTex);
+		DrawUI(canvasCoord.x, canvasCoord.y, io.Framerate, iconTex);
 
 		HandleCursorVisibility(window);
 
