@@ -10,6 +10,9 @@
 #include <sstream>
 #include <iomanip>
 #include <iostream>
+#include <ShObjIdl.h>
+#include <Windows.h>
+#include <string>
 
 void DrawMainMenu(GLFWwindow* window);
 void DrawBottomBar(int mouseX, int mouseY, float fps);
@@ -19,6 +22,9 @@ const ImVec2 m_ToolsWindowSize(150, 250);
 const ImVec2 m_ToolsWindowPos(800 - m_ToolsWindowSize.x - 20, 100);
 const ImVec2 m_ColorButtonSize(m_ToolsWindowSize.x / 2.0f, 24);
 static int m_BrushSize = 5;
+
+std::string sSelectedFile;
+std::string sFilePath;
 
 void InitUI(GLFWwindow* window)
 {
@@ -57,13 +63,15 @@ void DrawUI(GLFWwindow* window, int pixelX, int pixelY, float framerate, Texture
 
 void DrawMainMenu(GLFWwindow* window)
 {
+	static bool clearPopup = false;
+
 	if (ImGui::BeginMainMenuBar())
 	{
 		if (ImGui::BeginMenu("File"))
 		{
-			if (ImGui::MenuItem("New"))
+			if (ImGui::MenuItem("Clear canvas..."))
 			{
-				ClearCanvas();
+				clearPopup = true;
 			}
 
 			if (ImGui::MenuItem("Open..."))
@@ -83,6 +91,35 @@ void DrawMainMenu(GLFWwindow* window)
 		}
 
 		ImGui::EndMainMenuBar();
+	}
+
+	if (clearPopup)
+	{
+		ImGui::OpenPopup("Clear?");
+		clearPopup = false;
+	}
+
+	// Always center this window when appearing
+	ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+	ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+
+	if (ImGui::BeginPopupModal("Clear?", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+	{
+		ImGui::Text("This beautiful drawing will be discarded. Proceed?");
+		ImGui::Separator();
+
+		if (ImGui::Button("OK", ImVec2(120, 0)))
+		{
+			ImGui::CloseCurrentPopup();
+			ClearCanvas();
+		}
+		ImGui::SetItemDefaultFocus();
+		ImGui::SameLine();
+		if (ImGui::Button("Cancel", ImVec2(120, 0)))
+		{
+			ImGui::CloseCurrentPopup();
+		}
+		ImGui::EndPopup();
 	}
 }
 
@@ -181,7 +218,7 @@ void DrawToolsWindow(TextureObject iconTex)
 		}
 		ImGui::PopID();
 		ImGui::PopStyleColor(2);
-		
+
 		if (++count % 2 == 1)
 		{
 			ImGui::SameLine();
@@ -199,4 +236,63 @@ void SetUIBrushSlider(int value)
 bool IsCursorHoveringUI()
 {
 	return ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow | ImGuiHoveredFlags_AllowWhenBlockedByPopup | ImGuiHoveredFlags_AllowWhenBlockedByActiveItem);
+}
+
+bool openFile()
+{
+	//  CREATE FILE OBJECT INSTANCE
+	HRESULT f_SysHr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
+	if (FAILED(f_SysHr))
+		return FALSE;
+
+	// CREATE FileOpenDialog OBJECT
+	IFileOpenDialog* f_FileSystem;
+	f_SysHr = CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_ALL, IID_IFileOpenDialog, reinterpret_cast<void**>(&f_FileSystem));
+	if (FAILED(f_SysHr)) {
+		CoUninitialize();
+		return FALSE;
+	}
+
+	//  SHOW OPEN FILE DIALOG WINDOW
+	f_SysHr = f_FileSystem->Show(NULL);
+	if (FAILED(f_SysHr)) {
+		f_FileSystem->Release();
+		CoUninitialize();
+		return FALSE;
+	}
+
+	//  RETRIEVE FILE NAME FROM THE SELECTED ITEM
+	IShellItem* f_Files;
+	f_SysHr = f_FileSystem->GetResult(&f_Files);
+	if (FAILED(f_SysHr)) {
+		f_FileSystem->Release();
+		CoUninitialize();
+		return FALSE;
+	}
+
+	//  STORE AND CONVERT THE FILE NAME
+	PWSTR f_Path;
+	f_SysHr = f_Files->GetDisplayName(SIGDN_FILESYSPATH, &f_Path);
+	if (FAILED(f_SysHr)) {
+		f_Files->Release();
+		f_FileSystem->Release();
+		CoUninitialize();
+		return FALSE;
+	}
+
+	//  FORMAT AND STORE THE FILE PATH
+	std::wstring path(f_Path);
+	std::string c(path.begin(), path.end());
+	sFilePath = c;
+
+	//  FORMAT STRING FOR EXECUTABLE NAME
+	const size_t slash = sFilePath.find_last_of("/\\");
+	sSelectedFile = sFilePath.substr(slash + 1);
+
+	//  SUCCESS, CLEAN UP
+	CoTaskMemFree(f_Path);
+	f_Files->Release();
+	f_FileSystem->Release();
+	CoUninitialize();
+	return TRUE;
 }
