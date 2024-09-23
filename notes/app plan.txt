@@ -33,7 +33,7 @@ To do:
 - [x] Colored round brush (numbers change color as debug)
     - [x] fix colors (black brush is kinda greyish right now. it's because of linear filtering... proper scaling of the texture should solve this, probably)
     - [x] pressing numbers change painting color
-- [] Tools
+- [x] Tools
     - [x] Draggable tools menu with containing:
         * Round brush (panel wide button)
         * Eraser (panel wide button)
@@ -53,7 +53,7 @@ To do:
         - [x] paint bucket icon
         - [x] hide mouse when on canvas, show when on UI or outside of window
 
-    - [] Functioning bucket (maybe flood fill algo?)
+    - [x] Functioning bucket (maybe flood fill algo?)
 
 - [] Exit menu option
 - [] New menu option
@@ -71,6 +71,7 @@ To do:
     - [] If I drag out of screen too fast, it discards the rectangle
     - [] Tools menu should block drawing
     - [] CURSOR_HIDDEN doesn't really work
+    - [] optimize flood fill
 
 If I feel like it:
 - Fix bug where sometimes rectangles arent rasterized. Maybe a tool that draws in slowmo as it logs current steps on console....

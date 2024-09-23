@@ -51,9 +51,18 @@ bool IsPointWithinCircle(int pointX, int pointY, int centerX, int centerY, int r
 	return d <= r * r;
 }
 
-bool IsCursorWithinCanvas(double cursorX, double cursorY)
+bool IsCursorWithinCanvas(double x, double y)
 {
-	if (cursorX < 0 || cursorX >= CanvasWidth || cursorY < FrameHeight() || cursorY >= (m_WindowHeight - FrameHeight()))
+	if (x < 0 || x >= CanvasWidth || y < FrameHeight() || y >= (m_WindowHeight - FrameHeight()))
+	{
+		return false;
+	}
+
+	return true;
+}
+bool IsCanvasCoordWithinCanvas(double x, double y)
+{
+	if (x < 0 || x >= CanvasWidth || y < 0 || y >= CanvasHeight)
 	{
 		return false;
 	}
@@ -365,37 +374,36 @@ void PaintFill(double cursorX, double cursorY)
 		vec2int coord = coords.front();
 		coords.pop();
 
-		// adds cardinal neighbors to end of q if they're the same color as coord (and within canvas, and haven't been visited yet)
+		// adds cardinal neighbors to end of q if they're the same color as coord (and haven't been visited yet)
 		vec2int coordAbove(coord.x, coord.y - 1);
-		if (IsCursorWithinCanvas(coordAbove.x, coordAbove.y) && !visited.count(coordAbove) && IsSameColor(coord, coordAbove))
+		if (IsCanvasCoordWithinCanvas(coordAbove.x, coordAbove.y) && !visited.count(coordAbove) && IsSameColor(coord, coordAbove))
 		{
 			coords.push(coordAbove);
 			visited.insert(coordAbove);
 		}
 
 		vec2int coordLeft(coord.x - 1, coord.y);
-		if (IsCursorWithinCanvas(coordLeft.x, coordLeft.y) && !visited.count(coordLeft) && IsSameColor(coord, coordLeft))
+		if (IsCanvasCoordWithinCanvas(coordLeft.x, coordLeft.y) && !visited.count(coordLeft) && IsSameColor(coord, coordLeft))
 		{
 			coords.push(coordLeft);
 			visited.insert(coordLeft);
 		}
 
 		vec2int coordBelow(coord.x, coord.y + 1);
-		if (IsCursorWithinCanvas(coordBelow.x, coordBelow.y) && !visited.count(coordBelow) && IsSameColor(coord, coordBelow))
+		if (IsCanvasCoordWithinCanvas(coordBelow.x, coordBelow.y) && !visited.count(coordBelow) && IsSameColor(coord, coordBelow))
 		{
 			coords.push(coordBelow);
 			visited.insert(coordBelow);
 		}
 
 		vec2int coordRight(coord.x + 1, coord.y);
-		if (IsCursorWithinCanvas(coordRight.x, coordRight.y) && !visited.count(coordRight) && IsSameColor(coord, coordRight))
+		if (IsCanvasCoordWithinCanvas(coordRight.x, coordRight.y) && !visited.count(coordRight) && IsSameColor(coord, coordRight))
 		{
 			coords.push(coordRight);
 			visited.insert(coordRight);
 		}
 
 		// sets pixel at coord to brush color
-		//std::cout << "(" << coord.x << ", " << coord.y << ")" << std::endl;
 		data[VecToIndex(coord)] = m_BrushColor.x;
 		data[VecToIndex(coord) + 1] = m_BrushColor.y;
 		data[VecToIndex(coord) + 2] = m_BrushColor.z;
