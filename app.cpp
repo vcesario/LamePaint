@@ -497,3 +497,9 @@ int GetBrushSize()
 		return 0;
 	}
 }
+
+void ClearCanvas()
+{
+	data = std::vector<GLubyte>(CanvasWidth * CanvasHeight * 4, 255);
+	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, CanvasWidth, CanvasHeight, GL_RGBA, GL_UNSIGNED_BYTE, &data[0]);
+}

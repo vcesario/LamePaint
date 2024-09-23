@@ -104,3 +104,5 @@ void SwapBrushMode();
 BrushModes GetBrushMode();
 void SetBrushSize(int size);
 int GetBrushSize();
+
+void ClearCanvas();

@@ -56,7 +56,7 @@ To do:
     - [x] Functioning bucket (maybe flood fill algo?)
 
 - [x] Exit menu option
-- [] New menu option
+- [x] New menu option
 - [] Open menu option
 - [] Export menu option
 
@@ -66,12 +66,13 @@ To do:
     - [] Refactor UI palette drawing to remove duplicate code
     - [] Refactor vector math in rasterization algo
 
-- [] Bugfixes
+- [] Bugfixes/Final touches
     - [] Pixel coordinates shouldn't update while hovering top and bottom bars
     - [] If I drag out of screen too fast, it discards the rectangle
     - [] Tools menu should block drawing
     - [] CURSOR_HIDDEN doesn't really work
     - [] optimize flood fill
+    - [] lock window maximization
 
 If I feel like it:
 - Fix bug where sometimes rectangles arent rasterized. Maybe a tool that draws in slowmo as it logs current steps on console....

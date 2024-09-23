@@ -63,6 +63,7 @@ void DrawMainMenu(GLFWwindow* window)
 		{
 			if (ImGui::MenuItem("New"))
 			{
+				ClearCanvas();
 			}
 
 			if (ImGui::MenuItem("Open..."))
