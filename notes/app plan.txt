@@ -55,7 +55,7 @@ To do:
 
     - [x] Functioning bucket (maybe flood fill algo?)
 
-- [] Exit menu option
+- [x] Exit menu option
 - [] New menu option
 - [] Open menu option
 - [] Export menu option

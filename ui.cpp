@@ -11,7 +11,7 @@
 #include <iomanip>
 #include <iostream>
 
-void DrawMainMenu();
+void DrawMainMenu(GLFWwindow* window);
 void DrawBottomBar(int mouseX, int mouseY, float fps);
 void DrawToolsWindow(TextureObject iconTex);
 
@@ -38,14 +38,14 @@ void TerminateUI()
 	ImGui::DestroyContext();
 }
 
-void DrawUI(int pixelX, int pixelY, float framerate, TextureObject iconTex)
+void DrawUI(GLFWwindow* window, int pixelX, int pixelY, float framerate, TextureObject iconTex)
 {
 	// imgui logic
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
 
-	DrawMainMenu();
+	DrawMainMenu(window);
 	DrawBottomBar(pixelX, pixelY, framerate);
 
 	DrawToolsWindow(iconTex);
@@ -55,7 +55,7 @@ void DrawUI(int pixelX, int pixelY, float framerate, TextureObject iconTex)
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
-void DrawMainMenu()
+void DrawMainMenu(GLFWwindow* window)
 {
 	if (ImGui::BeginMainMenuBar())
 	{
@@ -75,6 +75,7 @@ void DrawMainMenu()
 
 			if (ImGui::MenuItem("Exit"))
 			{
+				glfwSetWindowShouldClose(window, true);
 			}
 
 			ImGui::EndMenu();

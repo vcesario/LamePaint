@@ -277,7 +277,7 @@ int main()
 		glBindVertexArray(VAO2);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-		DrawUI(canvasCoord.x, canvasCoord.y, io.Framerate, iconTex);
+		DrawUI(window, canvasCoord.x, canvasCoord.y, io.Framerate, iconTex);
 
 		HandleCursorVisibility(window);
 

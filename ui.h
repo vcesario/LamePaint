@@ -4,7 +4,7 @@
 #include "globals.h"
 
 void InitUI(GLFWwindow* window);
-void DrawUI(int pixelX, int pixelY, float framerate, TextureObject texObj);
+void DrawUI(GLFWwindow* window, int pixelX, int pixelY, float framerate, TextureObject texObj);
 void TerminateUI();
 void SetUIBrushSlider(int value);
 bool IsCursorHoveringUI();
