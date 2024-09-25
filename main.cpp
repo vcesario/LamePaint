@@ -28,9 +28,6 @@ void OnCursorMoved_Callback(GLFWwindow* window, double xpos, double ypos);
 void OnMouseClicked_Callback(GLFWwindow* window, int button, int action, int mods);
 void OnKeyChanged_Callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
-bool LoadTextureFromMemory(const void* data, size_t data_size, GLuint* out_texture, int* out_width, int* out_height);
-bool LoadTextureFromFile(const char* file_name, GLuint* out_texture, int* out_width, int* out_height);
-
 void HandleCursorVisibility(GLFWwindow* window);
 
 int main()

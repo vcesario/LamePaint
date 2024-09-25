@@ -17,14 +17,12 @@
 void DrawMainMenu(GLFWwindow* window);
 void DrawBottomBar(int mouseX, int mouseY, float fps);
 void DrawToolsWindow(TextureObject iconTex);
+bool openFile(std::string& filePath, std::string& selectedFile);
 
 const ImVec2 m_ToolsWindowSize(150, 250);
 const ImVec2 m_ToolsWindowPos(800 - m_ToolsWindowSize.x - 20, 100);
 const ImVec2 m_ColorButtonSize(m_ToolsWindowSize.x / 2.0f, 24);
 static int m_BrushSize = 5;
-
-std::string sSelectedFile;
-std::string sFilePath;
 
 void InitUI(GLFWwindow* window)
 {
@@ -76,6 +74,32 @@ void DrawMainMenu(GLFWwindow* window)
 
 			if (ImGui::MenuItem("Open..."))
 			{
+				std::string selectedFile;
+				std::string filePath;
+				bool result = openFile(filePath, selectedFile);
+
+				if (!result)
+				{
+					std::cout << "ENCOUNTERED AN ERROR: " << GetLastError() << std::endl;
+					return;
+				}
+
+				//std::cout << "SELECTED FILE: " << selectedFile.c_str() << std::endl;
+					//std::cout << "FILE PATH: " << filePath.c_str() << std::endl;
+
+				GLuint texId = 0;
+				int texWidth = 0;
+				int texHeight = 0;
+				result = LoadTextureFromFile(filePath.c_str(), &texId, &texWidth, &texHeight);
+				
+				if (!result)
+				{
+					std::cout << "ENCOUNTERED AN ERROR: " << GetLastError() << std::endl;
+					return;
+				}
+
+				TextureObject loadedImgTex(texId, texWidth, texHeight);
+				TransferTexToCanvas(loadedImgTex);
 			}
 
 			if (ImGui::MenuItem("Export..."))
@@ -238,7 +262,14 @@ bool IsCursorHoveringUI()
 	return ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow | ImGuiHoveredFlags_AllowWhenBlockedByPopup | ImGuiHoveredFlags_AllowWhenBlockedByActiveItem);
 }
 
-bool openFile()
+
+COMDLG_FILTERSPEC rgSpec[] =
+{
+	{ L"Image Files", L"*.jpg;*.jpeg;*.png;*.bmp" },
+	//{ L"szBMP", L"*.bmp" },
+	//{ L"szAll", L"*.*" },
+};
+bool openFile(std::string& filePath, std::string& selectedFile) // thanks https://stackoverflow.com/a/72429080
 {
 	//  CREATE FILE OBJECT INSTANCE
 	HRESULT f_SysHr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
@@ -252,6 +283,8 @@ bool openFile()
 		CoUninitialize();
 		return FALSE;
 	}
+
+	f_FileSystem->SetFileTypes(1, rgSpec);
 
 	//  SHOW OPEN FILE DIALOG WINDOW
 	f_SysHr = f_FileSystem->Show(NULL);
@@ -283,11 +316,11 @@ bool openFile()
 	//  FORMAT AND STORE THE FILE PATH
 	std::wstring path(f_Path);
 	std::string c(path.begin(), path.end());
-	sFilePath = c;
+	filePath = c;
 
 	//  FORMAT STRING FOR EXECUTABLE NAME
-	const size_t slash = sFilePath.find_last_of("/\\");
-	sSelectedFile = sFilePath.substr(slash + 1);
+	const size_t slash = filePath.find_last_of("/\\");
+	selectedFile = filePath.substr(slash + 1);
 
 	//  SUCCESS, CLEAN UP
 	CoTaskMemFree(f_Path);

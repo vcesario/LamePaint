@@ -106,3 +106,4 @@ void SetBrushSize(int size);
 int GetBrushSize();
 
 void ClearCanvas();
+void TransferTexToCanvas(TextureObject tex);

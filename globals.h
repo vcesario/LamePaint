@@ -21,3 +21,5 @@ enum class BrushModes
 	ERASER,
 	BUCKET,
 };
+
+bool LoadTextureFromFile(const char* file_name, GLuint* out_texture, int* out_width, int* out_height);
