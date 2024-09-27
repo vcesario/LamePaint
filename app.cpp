@@ -530,3 +530,8 @@ void TransferTexToCanvas(TextureObject tex)
 	BindCanvasTexture();
 	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, CanvasWidth, CanvasHeight, GL_RGBA, GL_UNSIGNED_BYTE, &data[0]);
 }
+
+void SaveTexToDisk(std::string filePath)
+{
+	// ...
+}

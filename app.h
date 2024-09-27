@@ -107,3 +107,4 @@ int GetBrushSize();
 
 void ClearCanvas();
 void TransferTexToCanvas(TextureObject tex);
+void SaveTexToDisk(std::string filePath);

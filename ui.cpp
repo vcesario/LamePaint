@@ -18,6 +18,7 @@ void DrawMainMenu(GLFWwindow* window);
 void DrawBottomBar(int mouseX, int mouseY, float fps);
 void DrawToolsWindow(TextureObject iconTex);
 bool openFile(std::string& filePath, std::string& selectedFile);
+bool askSavePath(std::string& filePath);
 
 const ImVec2 m_ToolsWindowSize(150, 250);
 const ImVec2 m_ToolsWindowPos(800 - m_ToolsWindowSize.x - 20, 100);
@@ -104,6 +105,19 @@ void DrawMainMenu(GLFWwindow* window)
 
 			if (ImGui::MenuItem("Export..."))
 			{
+				std::string filePath;
+				bool result = askSavePath(filePath);
+
+				if (!result)
+				{
+					std::cout << "ENCOUNTERED AN ERROR: " << GetLastError() << std::endl;
+					return;
+				}
+
+				// fix file extension (if none, should be .png)
+				// ...
+
+				SaveTexToDisk(filePath);
 			}
 
 			if (ImGui::MenuItem("Exit"))
@@ -323,6 +337,62 @@ bool openFile(std::string& filePath, std::string& selectedFile) // thanks https:
 	selectedFile = filePath.substr(slash + 1);
 
 	//  SUCCESS, CLEAN UP
+	CoTaskMemFree(f_Path);
+	f_Files->Release();
+	f_FileSystem->Release();
+	CoUninitialize();
+	return TRUE;
+}
+
+bool askSavePath(std::string& filePath)
+{
+	HRESULT f_SysHr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
+	if (FAILED(f_SysHr))
+		return FALSE;
+
+	IFileOpenDialog* f_FileSystem;
+	f_SysHr = CoCreateInstance(CLSID_FileSaveDialog, NULL, CLSCTX_ALL, IID_IFileSaveDialog, reinterpret_cast<void**>(&f_FileSystem));
+	if (FAILED(f_SysHr)) {
+		CoUninitialize();
+		return FALSE;
+	}
+
+	// suggested file name
+	// ...
+
+	f_FileSystem->SetFileTypes(1, rgSpec);
+
+	f_SysHr = f_FileSystem->Show(NULL);
+	if (FAILED(f_SysHr)) {
+		f_FileSystem->Release();
+		CoUninitialize();
+		return FALSE;
+	}
+
+	IShellItem* f_Files;
+	f_SysHr = f_FileSystem->GetResult(&f_Files);
+	if (FAILED(f_SysHr)) {
+		f_FileSystem->Release();
+		CoUninitialize();
+		return FALSE;
+	}
+
+	//  STORE AND CONVERT THE FILE NAME
+	PWSTR f_Path;
+	f_SysHr = f_Files->GetDisplayName(SIGDN_FILESYSPATH, &f_Path);
+	if (FAILED(f_SysHr)) {
+		f_Files->Release();
+		f_FileSystem->Release();
+		CoUninitialize();
+		return FALSE;
+	}
+
+	//  FORMAT AND STORE THE FILE PATH
+	std::wstring path(f_Path);
+	std::string c(path.begin(), path.end());
+
+	filePath = c;
+
 	CoTaskMemFree(f_Path);
 	f_Files->Release();
 	f_FileSystem->Release();

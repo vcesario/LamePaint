@@ -57,7 +57,7 @@ To do:
 
 - [x] Exit menu option
 - [x] New menu option
-- [] Open menu option
+- [x] Open menu option
 - [] Export menu option
 
 - [] Final code review
@@ -71,10 +71,10 @@ To do:
     - [] If I drag out of screen too fast, it discards the rectangle
     - [] Tools menu should block drawing
     - [] CURSOR_HIDDEN doesn't really work
-    - [] optimize flood fill
-    - [] lock window maximization
+    - [] prevent window resizing
 
 If I feel like it:
+- Optimize flood fill
 - Fix bug where sometimes rectangles arent rasterized. Maybe a tool that draws in slowmo as it logs current steps on console....
 - Color picker
 - Zoom
