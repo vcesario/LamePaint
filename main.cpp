@@ -24,6 +24,8 @@ bool IsClicking;
 bool IsDragging;
 bool ClickDownConsumed;
 
+unsigned int canvasTexId;
+
 void OnCursorMoved_Callback(GLFWwindow* window, double xpos, double ypos);
 void OnMouseClicked_Callback(GLFWwindow* window, int button, int action, int mods);
 void OnKeyChanged_Callback(GLFWwindow* window, int key, int scancode, int action, int mods);
@@ -78,9 +80,8 @@ int main()
 	// *** setup canvas texture
 	SetupCanvas(STARTING_WINDOW_W, STARTING_WINDOW_H);
 
-	unsigned int texture;
-	glGenTextures(1, &texture);
-	glBindTexture(GL_TEXTURE_2D, texture);
+	glGenTextures(1, &canvasTexId);
+	glBindTexture(GL_TEXTURE_2D, canvasTexId);
 	// set wrapping/filtering options on currently bound texture
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -212,7 +213,7 @@ int main()
 
 	while (!glfwWindowShouldClose(window))
 	{
-		glBindTexture(GL_TEXTURE_2D, texture); // canvas texture
+		glBindTexture(GL_TEXTURE_2D, canvasTexId); // canvas texture
 
 		// app logic
 		vec2int canvasCoord = CursorToCanvas(CursorX, CursorY);
@@ -425,4 +426,9 @@ void HandleCursorVisibility(GLFWwindow* window)
 			//std::cout << "cursor visible!" << std::endl;
 		}
 	}
+}
+
+void BindCanvasTexture()
+{
+	glBindTexture(GL_TEXTURE_2D, canvasTexId);
 }

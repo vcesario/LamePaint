@@ -501,6 +501,8 @@ int GetBrushSize()
 void ClearCanvas()
 {
 	data = std::vector<GLubyte>(CanvasWidth * CanvasHeight * 4, 255);
+
+	BindCanvasTexture();
 	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, CanvasWidth, CanvasHeight, GL_RGBA, GL_UNSIGNED_BYTE, &data[0]);
 }
 
@@ -513,5 +515,18 @@ void TransferTexToCanvas(TextureObject tex)
 	// getTexture to pixels
 	glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
 	// for loop transfering
-	// ...
+	for (size_t i = 0; i < tex.width && i < CanvasWidth; i++)
+	{
+		for (size_t j = 0; j < tex.height && j < CanvasHeight; j++)
+		{
+			data[CoordToIndex(i, j)] = pixels[j * tex.width * 4 + i * 4];
+			data[CoordToIndex(i, j) + 1] = pixels[j * tex.width * 4 + i * 4 + 1];
+			data[CoordToIndex(i, j) + 2] = pixels[j * tex.width * 4 + i * 4 + 2];
+			data[CoordToIndex(i, j) + 3] = pixels[j * tex.width * 4 + i * 4 + 3];
+		}
+	}
+
+	// update canvas texture
+	BindCanvasTexture();
+	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, CanvasWidth, CanvasHeight, GL_RGBA, GL_UNSIGNED_BYTE, &data[0]);
 }
