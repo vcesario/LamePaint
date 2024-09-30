@@ -61,9 +61,15 @@ To do:
 - [x] Export menu option
 
 - [] Final code review
-    - [] update to C++20 to use new std::format
+    - [x] Refactor UI palette drawing to remove duplicate code
+    - [-] update to C++20 to use new std::format (actually I don't see a strong reason to update)
     - [] Better separation of concerns to improve extensibility. Namespaces, maybe UI could have its own class?
-    - [] Refactor UI palette drawing to remove duplicate code
+        - UI: handles menus
+            - [] add icon texture and cursor rendering here
+        - Main: main loop, calls into DrawUI, DrawCanvas
+        - Input: mouse movement, clicks and keyboard
+        - App: handles drawing methods and tools
+        - IO: handles loading and saving...?
     - [] Refactor vector math in rasterization algo
 
 - [] Bugfixes/Final touches

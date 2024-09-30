@@ -29,8 +29,6 @@ void OnCursorMoved_Callback(GLFWwindow* window, double xpos, double ypos);
 void OnMouseClicked_Callback(GLFWwindow* window, int button, int action, int mods);
 void OnKeyChanged_Callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
-void HandleCursorVisibility(GLFWwindow* window);
-
 int main()
 {
 	glfwInit();
@@ -65,7 +63,7 @@ int main()
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	InitUI(window);
+	LameUI::Init(window);
 	ImGuiIO& io = ImGui::GetIO(); // wanted to do this inside InitUI() but I don't know how to properly make it global
 
 	// load icons texture
@@ -274,9 +272,7 @@ int main()
 		glBindVertexArray(VAO2);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-		DrawUI(window, canvasCoord.x, canvasCoord.y, io.Framerate, iconTex);
-
-		HandleCursorVisibility(window);
+		LameUI::Render(window, canvasCoord.x, canvasCoord.y, io.Framerate, iconTex);
 
 		glfwSwapBuffers(window);
 
@@ -284,7 +280,7 @@ int main()
 	}
 
 	// terminate imgui
-	TerminateUI();
+	LameUI::Terminate();
 
 	glfwTerminate();
 	return -1;
@@ -334,7 +330,7 @@ void OnKeyChanged_Callback(GLFWwindow* window, int key, int scancode, int action
 			}
 
 			SwapBrushMode();
-			SetUIBrushSlider(GetBrushSize());
+			LameUI::SetBrushSlider(GetBrushSize());
 			break;
 			//case 321: // numpad 1
 			//	SetBrushColor(Colors::Black);
@@ -402,29 +398,6 @@ bool LoadTextureFromFile(const char* file_name, GLuint* out_texture, int* out_wi
 	bool ret = LoadTextureFromMemory(file_data, file_size, out_texture, out_width, out_height);
 	IM_FREE(file_data);
 	return ret;
-}
-
-bool m_CursorOnUi;
-void HandleCursorVisibility(GLFWwindow* window)
-{
-	if (m_CursorOnUi)
-	{
-		if (!IsCursorHoveringUI())
-		{
-			m_CursorOnUi = false;
-			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN); // disable cursor (not working for some reason??)
-			//std::cout << "cursor hidden." << std::endl;
-		}
-	}
-	else
-	{
-		if (IsCursorHoveringUI())
-		{
-			m_CursorOnUi = true;
-			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-			//std::cout << "cursor visible!" << std::endl;
-		}
-	}
 }
 
 void BindCanvasTexture()

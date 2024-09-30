@@ -1,10 +1,14 @@
+#pragma once
+
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
 #include "globals.h"
 
-void InitUI(GLFWwindow* window);
-void DrawUI(GLFWwindow* window, int pixelX, int pixelY, float framerate, TextureObject texObj);
-void TerminateUI();
-void SetUIBrushSlider(int value);
-bool IsCursorHoveringUI();
+namespace LameUI
+{
+	void Init(GLFWwindow* window);
+	void Render(GLFWwindow* window, int pixelX, int pixelY, float framerate, TextureObject texObj);
+	void Terminate();
+	void SetBrushSlider(int value);
+}
