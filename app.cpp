@@ -8,6 +8,10 @@
 #include <queue>
 #include <unordered_set>
 
+//#define _CRT_SECURE_NO_WARNINGS
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include "stb_image_write.h"
+
 #define VecToIndex(Vec) Vec.y * CanvasWidth * 4 + Vec.x * 4
 #define CoordToIndex(X, Y) Y * CanvasWidth * 4 + X * 4
 
@@ -533,5 +537,8 @@ void TransferTexToCanvas(TextureObject tex)
 
 void SaveTexToDisk(std::string filePath)
 {
-	// ...
+	if (!stbi_write_png(filePath.c_str(), CanvasWidth, CanvasHeight, 4, &data[0], CanvasWidth * 4))
+	{
+		std::cout << "ENCOUNTERED AN ERROR WHILE WRITING PNG." << std::endl;
+	}
 }

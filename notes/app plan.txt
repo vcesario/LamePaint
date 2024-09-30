@@ -58,7 +58,7 @@ To do:
 - [x] Exit menu option
 - [x] New menu option
 - [x] Open menu option
-- [] Export menu option
+- [x] Export menu option
 
 - [] Final code review
     - [] update to C++20 to use new std::format

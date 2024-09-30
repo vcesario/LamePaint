@@ -115,7 +115,11 @@ void DrawMainMenu(GLFWwindow* window)
 				}
 
 				// fix file extension (if none, should be .png)
-				// ...
+				std::string extension(".png");
+				if (filePath.compare(filePath.size() - extension.size(), extension.size(), extension) != 0)
+				{
+					filePath.append(extension);
+				}
 
 				SaveTexToDisk(filePath);
 			}

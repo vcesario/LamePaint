@@ -2,6 +2,7 @@
 #include <glad/glad.h>
 #include <map>
 #include "globals.h"
+#include <string>
 
 struct vec2
 {
