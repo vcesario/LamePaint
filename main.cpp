@@ -37,7 +37,7 @@ int main()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	GLFWwindow* window = glfwCreateWindow(STARTING_WINDOW_W, STARTING_WINDOW_H, "Learn OpenGL", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(STARTING_WINDOW_W, STARTING_WINDOW_H, "LAMEPAINT", NULL, NULL);
 	if (window == NULL)
 	{
 		std::cout << "Failed to create window" << std::endl;
