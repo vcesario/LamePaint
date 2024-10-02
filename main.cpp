@@ -75,7 +75,7 @@ int main()
 	TextureObject iconTex(texId, texWidth, texHeight);
 
 	// *** setup canvas texture
-	SetupCanvas(STARTING_WINDOW_W, STARTING_WINDOW_H);
+	App::SetupCanvas(STARTING_WINDOW_W, STARTING_WINDOW_H);
 
 	glGenTextures(1, &canvasTexId);
 	glBindTexture(GL_TEXTURE_2D, canvasTexId);
@@ -85,41 +85,16 @@ int main()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-	//int width, height, nrChannels;
-	//unsigned char* data = stbi_load("wall.jpg", &width, &height, &nrChannels, 0);
-	//if (data)
-	//{
-	//	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-	//	glGenerateMipmap(GL_TEXTURE_2D);
-	//}
-	//else
-	//{
-	//	std::cout << "Failed to load texture" << std::endl;
-	//	glfwTerminate();
-	//	return -1;
-	//}
-	//stbi_image_free(data);
 
-
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, CanvasWidth, CanvasHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, &data[0]);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, App::CanvasWidth, App::CanvasHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, &App::data[0]);
 	glGenerateMipmap(GL_TEXTURE_2D); // apparently this is mandatory or else the actual textures aren't generated? not sure
-	//glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, STARTING_W, STARTING_H, GL_RGBA, GL_UNSIGNED_BYTE, &data[0]);
-	//glBindTexture(GL_TEXTURE_2D, 0);
-
-	//unsigned int fbo;
-	//glGenFramebuffers(1, &fbo);
-	//glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-	//glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
-	//glDrawBuffer(GL_COLOR_ATTACHMENT0);
-	//GLuint clearColor[4] = { 0, 0, 0, 0 };
-
 	// ***
 
 	// *** setup canvas quad
 	Shader canvasShader("canvas.vert", "canvas.frag");
 	canvasShader.use();
 
-	float framePercent = (float)FrameHeight() / (float)STARTING_WINDOW_H;
+	float framePercent = (float)App::FrameHeight() / (float)STARTING_WINDOW_H;
 	float canvasEdgeAnchor = (1 - framePercent) * 2 - 1;
 	float vertices[] = {
 		-1.0f,  canvasEdgeAnchor, 0.0f, 0.0f, 0.0f, // top left
@@ -170,10 +145,6 @@ int main()
 	bucketCursorShader.use();
 	bucketCursorShader.setVec2("windowSize", STARTING_WINDOW_W, STARTING_WINDOW_H);
 
-	// colocar vertices do tamanho exato do icone
-	// calcular uv pra pegar o pedaço exato da textura
-	// deslocar vertices pra casar exatamente a ponta do cursor com a ponta do balde
-
 	float cursorVerts[] = {
 		-1.0f,  1.0, 0.0f, 0.0f, 0.0f, // top left
 		 1.0f,  1.0, 0.0f, 1.0f, 0.0f, // top right
@@ -208,20 +179,28 @@ int main()
 	glViewport(0, 0, STARTING_WINDOW_W, STARTING_WINDOW_H);
 	glClearColor(0.3f, 0.7f, 0.1f, 1.0f);
 
+	App::Init();
+
 	while (!glfwWindowShouldClose(window))
 	{
+		App::ProcessInput();
+
+		App::Update();
+
+		App::Render();
+
 		glBindTexture(GL_TEXTURE_2D, canvasTexId); // canvas texture
 
 		// app logic
-		vec2int canvasCoord = CursorToCanvas(CursorX, CursorY);
-		if (GetBrushMode() == BrushModes::BUCKET)
+		vec2int canvasCoord = App::CursorToCanvas(CursorX, CursorY);
+		if (App::GetBrushMode() == BrushModes::BUCKET)
 		{
 			if (IsClicking)
 			{
 				if (!ClickDownConsumed)
 				{
-					PaintFill(CursorX, CursorY);
-					glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, CanvasWidth, CanvasHeight, GL_RGBA, GL_UNSIGNED_BYTE, &data[0]);
+					App::PaintFill(CursorX, CursorY);
+					glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, App::CanvasWidth, App::CanvasHeight, GL_RGBA, GL_UNSIGNED_BYTE, &App::data[0]);
 
 					ClickDownConsumed = true;
 				}
@@ -233,14 +212,14 @@ int main()
 			{
 				if (IsDragging)
 				{
-					PaintRectangle(CursorX_LastFrame, CursorY_LastFrame, CursorX, CursorY);
-					PaintCircle(CursorX, CursorY);
-					glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, CanvasWidth, CanvasHeight, GL_RGBA, GL_UNSIGNED_BYTE, &data[0]);
+					App::PaintRectangle(CursorX_LastFrame, CursorY_LastFrame, CursorX, CursorY);
+					App::PaintCircle(CursorX, CursorY);
+					glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, App::CanvasWidth, App::CanvasHeight, GL_RGBA, GL_UNSIGNED_BYTE, &App::data[0]);
 				}
 				else if (!ClickDownConsumed)
 				{
-					PaintCircle(CursorX, CursorY);
-					glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, CanvasWidth, CanvasHeight, GL_RGBA, GL_UNSIGNED_BYTE, &data[0]);
+					App::PaintCircle(CursorX, CursorY);
+					glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, App::CanvasWidth, App::CanvasHeight, GL_RGBA, GL_UNSIGNED_BYTE, &App::data[0]);
 
 					ClickDownConsumed = true;
 				}
@@ -255,7 +234,7 @@ int main()
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 		// draw cursor
-		if (GetBrushMode() == BrushModes::BUCKET)
+		if (App::GetBrushMode() == BrushModes::BUCKET)
 		{
 			glBindTexture(GL_TEXTURE_2D, iconTex.id); // bucket texture
 			bucketCursorShader.use();
@@ -265,8 +244,8 @@ int main()
 		{
 			cursorShader.use();
 			cursorShader.setVec2("cursorPos", CursorX, CursorY);
-			cursorShader.setFloat("brushSize", GetBrushSize());
-			cursorShader.setVec3("brushColor", GetBrushColor().x, GetBrushColor().y, GetBrushColor().z);
+			cursorShader.setFloat("brushSize", App::GetBrushSize());
+			cursorShader.setVec3("brushColor", App::GetBrushColor().x, App::GetBrushColor().y, App::GetBrushColor().z);
 		}
 
 		glBindVertexArray(VAO2);
@@ -278,6 +257,8 @@ int main()
 
 		glfwPollEvents();
 	}
+
+	App::Terminate();
 
 	// terminate imgui
 	LameUI::Terminate();
@@ -324,13 +305,13 @@ void OnKeyChanged_Callback(GLFWwindow* window, int key, int scancode, int action
 		switch (key)
 		{
 		case 88: // X
-			if (GetBrushMode() == BrushModes::BUCKET)
+			if (App::GetBrushMode() == BrushModes::BUCKET)
 			{
 				return;
 			}
 
-			SwapBrushMode();
-			LameUI::SetBrushSlider(GetBrushSize());
+			App::SwapBrushMode();
+			LameUI::SetBrushSlider(App::GetBrushSize());
 			break;
 			//case 321: // numpad 1
 			//	SetBrushColor(Colors::Black);

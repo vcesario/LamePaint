@@ -1,0 +1,37 @@
+Shaders.cpp
+
+-> Shaders::Init()
+-> Shaders::CursorShader.use() ??
+
+Move Icon Vertex Buffer initialization to UI namespace, and Canvas to App Initialization? Or have a Renderer class that takes care of all OpenGL setup?
+
+App::Update() -> has the input processing (or "logic")
+
+App::Render() -> checks if data has updated, if so updates canvas
+
+UI::Render() -> has cursor rendering, IMGUI logic and rendering as well
+
+main()
+{
+    // glfw setup
+    // ...
+    // ...
+    
+    App::Init() // setup canvas +  UI::Init()
+
+    while (glfwClose)
+    {
+        App::processInputs();
+
+        App::update();
+
+        App::render(); // --> Render canvas + UI::Render();
+
+        swapBuffers();
+        pollEvents();
+    }
+
+    // terminate
+    // ...
+
+}

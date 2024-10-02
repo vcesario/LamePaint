@@ -199,7 +199,7 @@ namespace LameUI
 					}
 
 					TextureObject loadedImgTex(texId, texWidth, texHeight);
-					TransferTexToCanvas(loadedImgTex);
+					App::TransferTexToCanvas(loadedImgTex);
 				}
 
 				if (ImGui::MenuItem("Export..."))
@@ -220,7 +220,7 @@ namespace LameUI
 						filePath.append(extension);
 					}
 
-					SaveTexToDisk(filePath);
+					App::SaveTexToDisk(filePath);
 				}
 
 				if (ImGui::MenuItem("Exit"))
@@ -252,7 +252,7 @@ namespace LameUI
 			if (ImGui::Button("OK", ImVec2(120, 0)))
 			{
 				ImGui::CloseCurrentPopup();
-				ClearCanvas();
+				App::ClearCanvas();
 			}
 			ImGui::SetItemDefaultFocus();
 			ImGui::SameLine();
@@ -315,8 +315,8 @@ namespace LameUI
 		if (ImGui::ImageButton("##RoundBrush", (void*)(intptr_t)iconTex.id, imgSize, uvMin, uvMax))
 		{
 			//std::cout << "round brush selected" << std::endl;
-			SetModeToDefault();
-			SetBrushSlider(GetBrushSize());
+			App::SetModeToDefault();
+			SetBrushSlider(App::GetBrushSize());
 		}
 
 		uvMin = ImVec2(imgSize.x * 0 / 98.0f, imgSize.y * 1 / 98.0f);
@@ -324,8 +324,8 @@ namespace LameUI
 		if (ImGui::ImageButton("##Eraser", (void*)(intptr_t)iconTex.id, imgSize, uvMin, uvMax))
 		{
 			//std::cout << "Eraser selected" << std::endl;
-			SetModeToEraser();
-			SetBrushSlider(GetBrushSize());
+			App::SetModeToEraser();
+			SetBrushSlider(App::GetBrushSize());
 		}
 
 		uvMin = ImVec2(imgSize.x * 1 / 98.0f, imgSize.y * 1 / 98.0f);
@@ -333,8 +333,8 @@ namespace LameUI
 		if (ImGui::ImageButton("##PaintBucket", (void*)(intptr_t)iconTex.id, imgSize, uvMin, uvMax))
 		{
 			//std::cout << "paint bucket selected" << std::endl;
-			SetModeToBucket();
-			SetBrushSlider(GetBrushSize());
+			App::SetModeToBucket();
+			SetBrushSlider(App::GetBrushSize());
 		}
 		ImGui::PopStyleVar();
 
@@ -343,14 +343,14 @@ namespace LameUI
 		ImGui::SetNextItemWidth(sliderWidth);
 		if (ImGui::SliderInt(sliderLabel, &m_BrushSize, 1, 100))
 		{
-			SetBrushSize(m_BrushSize);
+			App::SetBrushSize(m_BrushSize);
 		}
 
 		float buttonWidth = ImGui::GetContentRegionAvail().x / 2.0f - ImGui::GetStyle().FramePadding.x;
 		ImVec2 colorButtonSize(buttonWidth, 20);
 
 		int count = 0;
-		for (auto const& colorPair : m_ColorIdToVal)
+		for (auto const& colorPair : App::m_ColorIdToVal)
 		{
 			ImVec4 color01 = ImVec4(colorPair.second.x / 255.0f, colorPair.second.y / 255.0f, colorPair.second.z / 255.0f, 1.0f);
 			ImGui::PushStyleColor(ImGuiCol_Button, color01);

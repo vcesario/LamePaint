@@ -75,37 +75,46 @@ struct vec3byte
 	}
 };
 
-enum class Colors
+namespace App
 {
-	Black,
-	White,
-	Red,
-	Green,
-	Blue,
-	Yellow,
-};
+	enum class Colors
+	{
+		Black,
+		White,
+		Red,
+		Green,
+		Blue,
+		Yellow,
+	};
 
-extern int CanvasWidth;
-extern int CanvasHeight;
-extern std::vector<GLubyte> data;
-extern std::map<Colors, vec3byte> m_ColorIdToVal;
+	extern int CanvasWidth;
+	extern int CanvasHeight;
+	extern std::vector<GLubyte> data;
+	extern std::map<Colors, vec3byte> m_ColorIdToVal;
 
-int FrameHeight();
-vec2int CursorToCanvas(double cursorX, double cursorY);
-void SetupCanvas(int windowWidth, int windowHeight);
-void PaintCircle(double cursorX, double cursorY);
-void PaintRectangle(double cursorX_LastFrame, double cursorY_LastFrame, double cursorX, double cursorY);
-void PaintFill(double cursorX, double cursorY);
-void SetBrushColor(Colors newColor);
-vec3byte GetBrushColor();
-void SetModeToDefault();
-void SetModeToEraser();
-void SetModeToBucket();
-void SwapBrushMode();
-BrushModes GetBrushMode();
-void SetBrushSize(int size);
-int GetBrushSize();
+	void Init();
+	void ProcessInput();
+	void Update();
+	void Render();
+	void Terminate();
 
-void ClearCanvas();
-void TransferTexToCanvas(TextureObject tex);
-void SaveTexToDisk(std::string filePath);
+	int FrameHeight();
+	vec2int CursorToCanvas(double cursorX, double cursorY);
+	void SetupCanvas(int windowWidth, int windowHeight);
+	void PaintCircle(double cursorX, double cursorY);
+	void PaintRectangle(double cursorX_LastFrame, double cursorY_LastFrame, double cursorX, double cursorY);
+	void PaintFill(double cursorX, double cursorY);
+	void SetBrushColor(Colors newColor);
+	vec3byte GetBrushColor();
+	void SetModeToDefault();
+	void SetModeToEraser();
+	void SetModeToBucket();
+	void SwapBrushMode();
+	BrushModes GetBrushMode();
+	void SetBrushSize(int size);
+	int GetBrushSize();
+
+	void ClearCanvas();
+	void TransferTexToCanvas(TextureObject tex);
+	void SaveTexToDisk(std::string filePath);
+}
