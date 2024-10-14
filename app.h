@@ -92,7 +92,7 @@ namespace App
 	extern std::vector<GLubyte> data;
 	extern std::map<Colors, vec3byte> m_ColorIdToVal;
 
-	void Init();
+	void Init(int windowWidth, int windowHeight);
 	void ProcessInput();
 	void Update();
 	void Render();
@@ -100,7 +100,6 @@ namespace App
 
 	int FrameHeight();
 	vec2int CursorToCanvas(double cursorX, double cursorY);
-	void SetupCanvas(int windowWidth, int windowHeight);
 	void PaintCircle(double cursorX, double cursorY);
 	void PaintRectangle(double cursorX_LastFrame, double cursorY_LastFrame, double cursorX, double cursorY);
 	void PaintFill(double cursorX, double cursorY);

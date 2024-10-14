@@ -96,6 +96,9 @@
     <ClInclude Include="stb_image_write.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="input.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="canvas.frag">

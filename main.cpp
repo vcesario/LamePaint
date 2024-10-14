@@ -1,5 +1,6 @@
 #include "ui.h"
 #include "app.h"
+#include "input.h"
 #include "shader_s.h"
 
 #define STB_IMAGE_IMPLEMENTATION
@@ -15,19 +16,7 @@
 const int STARTING_WINDOW_W = 800;
 const int STARTING_WINDOW_H = 600;
 
-double CursorX;
-double CursorY;
-double CursorX_LastFrame;
-double CursorY_LastFrame;
-bool IsClicking;
-bool IsDragging;
-bool ClickDownConsumed;
-
 unsigned int canvasTexId;
-
-void OnCursorMoved_Callback(GLFWwindow* window, double xpos, double ypos);
-void OnMouseClicked_Callback(GLFWwindow* window, int button, int action, int mods);
-void OnKeyChanged_Callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
 int main()
 {
@@ -49,9 +38,7 @@ int main()
 	//glfwSwapInterval(0); // vsync off - useful to understand app performance even if above 60fps
 	//glfwSwapInterval(1); // vsync on - needed for my personal notebook's screen, it seems
 
-	glfwSetCursorPosCallback(window, OnCursorMoved_Callback);
-	glfwSetMouseButtonCallback(window, OnMouseClicked_Callback);
-	glfwSetKeyCallback(window, OnKeyChanged_Callback);
+	LameInput::Init(window);
 
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
@@ -59,6 +46,8 @@ int main()
 		glfwTerminate();
 		return -1;
 	}
+
+	App::Init(STARTING_WINDOW_W, STARTING_WINDOW_H);
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -74,9 +63,6 @@ int main()
 	IM_ASSERT(ret);
 	TextureObject iconTex(texId, texWidth, texHeight);
 
-	// *** setup canvas texture
-	App::SetupCanvas(STARTING_WINDOW_W, STARTING_WINDOW_H);
-
 	glGenTextures(1, &canvasTexId);
 	glBindTexture(GL_TEXTURE_2D, canvasTexId);
 	// set wrapping/filtering options on currently bound texture
@@ -84,7 +70,6 @@ int main()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
 
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, App::CanvasWidth, App::CanvasHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, &App::data[0]);
 	glGenerateMipmap(GL_TEXTURE_2D); // apparently this is mandatory or else the actual textures aren't generated? not sure
@@ -179,8 +164,6 @@ int main()
 	glViewport(0, 0, STARTING_WINDOW_W, STARTING_WINDOW_H);
 	glClearColor(0.3f, 0.7f, 0.1f, 1.0f);
 
-	App::Init();
-
 	while (!glfwWindowShouldClose(window))
 	{
 		App::ProcessInput();
@@ -192,36 +175,36 @@ int main()
 		glBindTexture(GL_TEXTURE_2D, canvasTexId); // canvas texture
 
 		// app logic
-		vec2int canvasCoord = App::CursorToCanvas(CursorX, CursorY);
+		vec2int canvasCoord = App::CursorToCanvas(LameInput::CursorX, LameInput::CursorY);
 		if (App::GetBrushMode() == BrushModes::BUCKET)
 		{
-			if (IsClicking)
+			if (LameInput::IsClicking)
 			{
-				if (!ClickDownConsumed)
+				if (!LameInput::ClickDownConsumed)
 				{
-					App::PaintFill(CursorX, CursorY);
+					App::PaintFill(LameInput::CursorX, LameInput::CursorY);
 					glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, App::CanvasWidth, App::CanvasHeight, GL_RGBA, GL_UNSIGNED_BYTE, &App::data[0]);
 
-					ClickDownConsumed = true;
+					LameInput::ClickDownConsumed = true;
 				}
 			}
 		}
 		else
 		{
-			if (IsClicking)
+			if (LameInput::IsClicking)
 			{
-				if (IsDragging)
+				if (LameInput::IsDragging)
 				{
-					App::PaintRectangle(CursorX_LastFrame, CursorY_LastFrame, CursorX, CursorY);
-					App::PaintCircle(CursorX, CursorY);
+					App::PaintRectangle(LameInput::CursorX_LastFrame, LameInput::CursorY_LastFrame, LameInput::CursorX, LameInput::CursorY);
+					App::PaintCircle(LameInput::CursorX, LameInput::CursorY);
 					glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, App::CanvasWidth, App::CanvasHeight, GL_RGBA, GL_UNSIGNED_BYTE, &App::data[0]);
 				}
-				else if (!ClickDownConsumed)
+				else if (!LameInput::ClickDownConsumed)
 				{
-					App::PaintCircle(CursorX, CursorY);
+					App::PaintCircle(LameInput::CursorX, LameInput::CursorY);
 					glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, App::CanvasWidth, App::CanvasHeight, GL_RGBA, GL_UNSIGNED_BYTE, &App::data[0]);
 
-					ClickDownConsumed = true;
+					LameInput::ClickDownConsumed = true;
 				}
 			}
 		}
@@ -238,12 +221,12 @@ int main()
 		{
 			glBindTexture(GL_TEXTURE_2D, iconTex.id); // bucket texture
 			bucketCursorShader.use();
-			bucketCursorShader.setVec2("cursorPos", CursorX, CursorY);
+			bucketCursorShader.setVec2("cursorPos", LameInput::CursorX, LameInput::CursorY);
 		}
 		else
 		{
 			cursorShader.use();
-			cursorShader.setVec2("cursorPos", CursorX, CursorY);
+			cursorShader.setVec2("cursorPos", LameInput::CursorX, LameInput::CursorY);
 			cursorShader.setFloat("brushSize", App::GetBrushSize());
 			cursorShader.setVec3("brushColor", App::GetBrushColor().x, App::GetBrushColor().y, App::GetBrushColor().z);
 		}
@@ -265,71 +248,6 @@ int main()
 
 	glfwTerminate();
 	return -1;
-}
-
-void OnCursorMoved_Callback(GLFWwindow* window, double xpos, double ypos)
-{
-	CursorX_LastFrame = CursorX;
-	CursorY_LastFrame = CursorY;
-
-	CursorX = xpos;
-	CursorY = ypos;
-
-	IsDragging = IsClicking;
-	if (IsDragging)
-	{
-		ClickDownConsumed = true;
-	}
-}
-
-void OnMouseClicked_Callback(GLFWwindow* window, int button, int action, int mods)
-{
-	//std::cout << button << ", " << action << ", " << mods << std::endl;
-	if (button == 0)
-	{
-		IsClicking = action;
-
-		if (action == 0)
-		{
-			ClickDownConsumed = false;
-		}
-	}
-}
-
-void OnKeyChanged_Callback(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
-	//std::cout << key << ", " << scancode << ", " << action << ", " << mods << std::endl;
-
-	if (action == 1) // if button down
-	{
-		switch (key)
-		{
-		case 88: // X
-			if (App::GetBrushMode() == BrushModes::BUCKET)
-			{
-				return;
-			}
-
-			App::SwapBrushMode();
-			LameUI::SetBrushSlider(App::GetBrushSize());
-			break;
-			//case 321: // numpad 1
-			//	SetBrushColor(Colors::Black);
-			//	break;
-			//case 322:
-			//	SetBrushColor(Colors::White);
-			//	break;
-			//case 323:
-			//	SetBrushColor(Colors::Red);
-			//	break;
-			//case 324:
-			//	SetBrushColor(Colors::Green);
-			//	break;
-			//case 325: // numpad 5
-			//	SetBrushColor(Colors::Blue);
-			//	break;
-		}
-	}
 }
 
 bool LoadTextureFromMemory(const void* data, size_t data_size, GLuint* out_texture, int* out_width, int* out_height)

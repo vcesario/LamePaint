@@ -1,4 +1,6 @@
 #include "app.h"
+#include "input.h"
+#include "ui.h"
 
 #include <GLFW/glfw3.h>
 #include "imgui/imgui.h"
@@ -49,12 +51,29 @@ namespace App
 
 	BrushModes m_CurrentMode = BrushModes::DEFAULT;
 
-	void Init()
+	int m_CallbackId_OnKeyChanged;
+	void OnKeyChanged(int key, int action);
+
+
+	void Init(int windowWidth, int windowHeight)
+	{
+		m_WindowWidth = windowWidth;
+		m_WindowHeight = windowHeight;
+
+		CanvasWidth = windowWidth;
+		CanvasHeight = windowHeight - FrameHeight() * 2;
+
+		data = std::vector<GLubyte>(CanvasWidth * CanvasHeight * 4, 255);
+
+		m_CallbackId_OnKeyChanged = LameInput::Subscribe_KeyChanged(OnKeyChanged);
+	}
+
+	void ProcessInput()
 	{
 
 	}
 
-	void ProcessInput()
+	void Update()
 	{
 
 	}
@@ -67,6 +86,25 @@ namespace App
 	void Terminate()
 	{
 
+	}
+
+	void OnKeyChanged(int key, int action)
+	{
+		if (action == 1) // if button down
+		{
+			switch (key)
+			{
+			case 88: // X
+				if (GetBrushMode() == BrushModes::BUCKET)
+				{
+					return;
+				}
+
+				SwapBrushMode();
+				LameUI::SetBrushSlider(App::GetBrushSize());
+				break;
+			}
+		}
 	}
 
 	bool IsPointWithinCircle(int pointX, int pointY, int centerX, int centerY, int r)
@@ -106,17 +144,6 @@ namespace App
 		int pixelX = cursorX;
 		int pixelY = cursorY - FrameHeight();
 		return vec2int(pixelX, pixelY);
-	}
-
-	void SetupCanvas(int windowWidth, int windowHeight)
-	{
-		m_WindowWidth = windowWidth;
-		m_WindowHeight = windowHeight;
-
-		CanvasWidth = windowWidth;
-		CanvasHeight = windowHeight - FrameHeight() * 2;
-
-		data = std::vector<GLubyte>(CanvasWidth * CanvasHeight * 4, 255);
 	}
 
 	void PaintCircle(double cursorX, double cursorY)
